@@ -87,13 +87,18 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
                       ].map((group, groupIndex) => (
                         <li key={groupIndex}>
                           <button className="btn" type="button">
-                            {group.groupName}
+                            {group.groupName}に移動
                           </button>
                         </li>
                       ))}
                       <li>
                         <button className="btn" type="button">
                           グループを新規に作成して追加
+                        </button>
+                      </li>
+                      <li>
+                        <button className="btn" type="button">
+                          グループから削除
                         </button>
                       </li>
                     </ul>

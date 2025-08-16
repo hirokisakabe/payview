@@ -10,7 +10,7 @@ export function PaymentPage({ fileName }: Props) {
 
   return (
     <>
-      <h2 className="text-lg text-primary-content">{fileName}</h2>
+      <h2 className="text-primary-content text-lg">{fileName}</h2>
 
       <div role="tablist" className="tabs tabs-border">
         <Link
@@ -32,7 +32,7 @@ export function PaymentPage({ fileName }: Props) {
       </div>
 
       {payments.status === "loading" ? (
-        <div className="w-max mx-auto">
+        <div className="mx-auto w-max">
           <span className="loading loading-spinner loading-xl"></span>
         </div>
       ) : (

@@ -4,8 +4,8 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 export const Route = createRootRoute({
   component: () => (
     <>
-      <div className="max-w-7xl px-10 mx-auto pt-5">
-        <h1 className="text-xl font-bold mb-5">
+      <div className="mx-auto max-w-7xl px-10 pt-5">
+        <h1 className="mb-5 text-xl font-bold">
           <Link to="/">payview</Link>
         </h1>
 

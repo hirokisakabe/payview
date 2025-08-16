@@ -55,31 +55,32 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
                     <button
                       className="btn btn-square"
                       type="button"
-                      onClick={() =>
-                        document.getElementById("my_modal_1").showModal()
+                      popoverTarget={`popover-${index}`}
+                      style={
+                        {
+                          anchorName: `--anchor-${index}`,
+                        } /* as React.CSSProperties */
                       }
                     >
                       <EllipsisHorizontalIcon className="size-3" />
                     </button>
-                    <dialog id="my_modal_1" className="modal">
-                      <div className="modal-box">
-                        <h3 className="text-lg font-bold">グループ化</h3>
-                        <p className="py-4">
-                          次の項目をグループ化します。<br />{item.name}
-                        </p>
-                        <div className="modal-action">
-                          <form method="dialog">
-                            <button className="btn" type="button">
-                              キャンセル
-                            </button>
-                            {/* if there is a button in form, it will close the modal */}
-                            <button className="btn" type="button">
-                              キャンセル
-                            </button>
-                          </form>
-                        </div>
-                      </div>
-                    </dialog>
+                    <ul
+                      className="dropdown menu rounded-box bg-base-100 w-full max-w-40 shadow-sm"
+                      popover="auto"
+                      id={`popover-${index}`}
+                      style={
+                        {
+                          positionAnchor: `--anchor-${index}`,
+                        } /* as React.CSSProperties */
+                      }
+                    >
+                      <li>
+                        <a>Item 1</a>
+                      </li>
+                      <li>
+                        <a>Item 2</a>
+                      </li>
+                    </ul>
                   </td>
                 </tr>
               ))}

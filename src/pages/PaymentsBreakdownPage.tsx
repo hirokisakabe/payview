@@ -43,7 +43,7 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
               <tr>
                 <th>項目</th>
                 <th>金額</th>
-                <th></th>
+                <th>グループ化</th>
               </tr>
             </thead>
             <tbody>
@@ -74,11 +74,27 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
                         } /* as React.CSSProperties */
                       }
                     >
+                      {[
+                        {
+                          groupName: "グループA",
+                        },
+                        {
+                          groupName: "グループB",
+                        },
+                        {
+                          groupName: "グループC",
+                        },
+                      ].map((group, groupIndex) => (
+                        <li key={groupIndex}>
+                          <button className="btn" type="button">
+                            {group.groupName}
+                          </button>
+                        </li>
+                      ))}
                       <li>
-                        <a>Item 1</a>
-                      </li>
-                      <li>
-                        <a>Item 2</a>
+                        <button className="btn" type="button">
+                          グループを新規に作成して追加
+                        </button>
                       </li>
                     </ul>
                   </td>

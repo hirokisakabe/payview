@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "2.2.0",
     "@tailwindcss/vite": "4.1.12",
     "@tanstack/react-router": "1.131.17",
     "@tanstack/react-router-devtools": "1.131.17",

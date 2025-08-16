@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { usePaymentsBreakdown } from "../data/usePaymentsBreakdown";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   fileName: string;
@@ -42,6 +43,7 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
               <tr>
                 <th>項目</th>
                 <th>金額</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -49,6 +51,36 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
                 <tr key={index}>
                   <td>{item.name}</td>
                   <td>{item.total} 円</td>
+                  <td>
+                    <button
+                      className="btn btn-square"
+                      type="button"
+                      onClick={() =>
+                        document.getElementById("my_modal_1").showModal()
+                      }
+                    >
+                      <EllipsisHorizontalIcon className="size-3" />
+                    </button>
+                    <dialog id="my_modal_1" className="modal">
+                      <div className="modal-box">
+                        <h3 className="text-lg font-bold">グループ化</h3>
+                        <p className="py-4">
+                          次の項目をグループ化します。<br />{item.name}
+                        </p>
+                        <div className="modal-action">
+                          <form method="dialog">
+                            <button className="btn" type="button">
+                              キャンセル
+                            </button>
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn" type="button">
+                              キャンセル
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </dialog>
+                  </td>
                 </tr>
               ))}
             </tbody>

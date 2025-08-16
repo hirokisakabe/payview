@@ -19,7 +19,7 @@ export function RootPage() {
       return;
     }
 
-    await addPayments(selectedFile);
+    void (await addPayments(selectedFile));
 
     setSelectedFile(undefined);
     if (fileInputRef.current) {
@@ -39,7 +39,11 @@ export function RootPage() {
           ref={fileInputRef}
           onChange={(e) => handleFileSelect(e.target.files?.[0])}
         />
-        <button className="btn max-w-40" type="button" onClick={handleSubmit}>
+        <button
+          className="btn max-w-40"
+          type="button"
+          onClick={() => void handleSubmit()}
+        >
           アップロード
         </button>
       </div>

@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "4.1.12",
     "@tanstack/react-router": "1.131.17",
     "@tanstack/react-router-devtools": "1.131.17",
+    "clsx": "2.1.1",
     "csv": "6.4.1",
     "daisyui": "5.0.50",
     "dexie": "4.0.11",

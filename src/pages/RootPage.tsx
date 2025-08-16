@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { addPayments } from "../data/addPayments";
 import { usePaymentsFiles } from "../data/usePaymentsFiles";
+import { Link } from "@tanstack/react-router";
 
 export function RootPage() {
   const files = usePaymentsFiles();
@@ -54,7 +55,12 @@ export function RootPage() {
           <ul className="list">
             {files.map((file, index) => (
               <li key={index} className="list-row">
-                <a href={`/payments/${file.fileName}`}>{file.fileName}</a>
+                <Link
+                  to="/payments/$fileName"
+                  params={{ fileName: file.fileName }}
+                >
+                  {file.fileName}
+                </Link>
               </li>
             ))}
           </ul>

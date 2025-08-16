@@ -4,7 +4,9 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
 
-const router = createRouter({ routeTree });
+const basepath = import.meta.env.BASE_URL ?? "payview";
+
+const router = createRouter({ routeTree, basepath });
 
 declare module "@tanstack/react-router" {
   interface Register {

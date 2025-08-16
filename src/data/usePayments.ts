@@ -20,7 +20,7 @@ type Payment = z.infer<typeof paymentSchema>;
 
 export function usePayments({ fileName }: Props) {
   const files = useLiveQuery(() =>
-    db.paymentFiles.where("fileName").equals(fileName).toArray()
+    db.paymentFiles.where("fileName").equals(fileName).toArray(),
   );
   const file = files ? files[0] : undefined;
 

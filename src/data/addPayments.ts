@@ -1,4 +1,4 @@
-import { db } from "./db"; 
+import { db } from "./db";
 
 export function addPayments(file: File) {
   return db.paymentFiles.add({

@@ -22,7 +22,7 @@ export function usePaymentsBreakdown({ fileName }: Props) {
         acc[name] += parseInt(price, 10);
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     const _breakdown = Object.entries(breakdown).map(([name, total]) => ({

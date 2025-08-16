@@ -11,13 +11,21 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "4.1.12",
+    "@tanstack/react-router": "1.131.17",
+    "@tanstack/react-router-devtools": "1.131.17",
+    "csv": "6.4.1",
     "daisyui": "5.0.50",
+    "dexie": "4.0.11",
+    "dexie-react-hooks": "1.1.7",
+    "encoding-japanese": "2.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwindcss": "4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@tanstack/router-plugin": "1.131.17",
+    "@types/encoding-japanese": "2.2.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",

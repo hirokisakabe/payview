@@ -7,6 +7,7 @@ import { globalIgnores } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import reactX from "eslint-plugin-react-x";
 import reactDom from "eslint-plugin-react-dom";
+import pluginRouter from "@tanstack/eslint-plugin-router";
 
 export default tseslint.config([
   globalIgnores(["dist"]),
@@ -18,6 +19,7 @@ export default tseslint.config([
       reactX.configs["recommended-typescript"],
       reactDom.configs.recommended,
       reactHooks.configs["recommended-latest"],
+      ...pluginRouter.configs["flat/recommended"],
       reactRefresh.configs.vite,
       eslintConfigPrettier,
     ],

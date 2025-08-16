@@ -52,9 +52,9 @@ export function RootPage() {
       <div>
         <p>ファイル一覧</p>
         {files && (
-          <ul className="list">
+          <ul className="menu bg-base-200 rounded-box w-full">
             {files.map((file, index) => (
-              <li key={index} className="list-row">
+              <li key={index}>
                 <Link
                   to="/payments/$fileName"
                   params={{ fileName: file.fileName }}

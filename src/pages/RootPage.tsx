@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { addPayments } from "../data/addPayments";
 import { usePaymentsFiles } from "../data/usePaymentsFiles";
 import { Link } from "@tanstack/react-router";
+import clsx from "clsx";
 
 export function RootPage() {
   const files = usePaymentsFiles();
@@ -28,6 +29,8 @@ export function RootPage() {
     }
   };
 
+  const uploadButtonDisabled = !selectedFile;
+
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-2">
@@ -41,9 +44,13 @@ export function RootPage() {
           onChange={(e) => handleFileSelect(e.target.files?.[0])}
         />
         <button
-          className="btn max-w-40"
+          className={clsx(
+            "btn max-w-40",
+            uploadButtonDisabled && "btn-disabled",
+          )}
           type="button"
           onClick={() => void handleSubmit()}
+          disabled={uploadButtonDisabled}
         >
           アップロード
         </button>

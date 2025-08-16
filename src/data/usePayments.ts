@@ -27,7 +27,7 @@ export function usePayments({ fileName }: Props) {
   const [payments, setPayments] = useState<Payment[]>();
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       if (!file) {
         return [];
       }

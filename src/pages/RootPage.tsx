@@ -34,7 +34,7 @@ export function RootPage() {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-2">
-        <p>ファイルアップロード</p>
+        <h2 className="text-lg">ファイルアップロード</h2>
         <input
           className="file-input file-input-ghost"
           type="file"
@@ -57,7 +57,7 @@ export function RootPage() {
       </div>
 
       <div>
-        <p>ファイル一覧</p>
+        <h2 className="text-lg">ファイル一覧</h2>
         {files && (
           <ul className="menu bg-base-200 rounded-box w-full">
             {files.map((file, index) => (

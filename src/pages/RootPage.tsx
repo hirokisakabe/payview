@@ -34,7 +34,7 @@ export function RootPage() {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg">ファイルアップロード</h2>
+        <h2 className="text-lg text-primary-content">ファイルアップロード</h2>
         <input
           className="file-input file-input-ghost"
           type="file"
@@ -45,7 +45,7 @@ export function RootPage() {
         />
         <button
           className={clsx(
-            "btn max-w-40",
+            "btn max-w-40 btn-primary",
             uploadButtonDisabled && "btn-disabled",
           )}
           type="button"
@@ -57,7 +57,7 @@ export function RootPage() {
       </div>
 
       <div>
-        <h2 className="text-lg">ファイル一覧</h2>
+        <h2 className="text-lg text-primary-content">ファイル一覧</h2>
         {files && (
           <ul className="menu bg-base-200 rounded-box w-full">
             {files.map((file, index) => (

@@ -6,6 +6,7 @@ export const Route = createFileRoute("/breakdown/$fileName")({
 });
 
 function _PaymentsBreakdownPage() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { fileName } = Route.useParams();
   return <PaymentsBreakdownPage fileName={fileName} />;
 }

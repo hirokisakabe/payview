@@ -10,7 +10,7 @@ export function PaymentPage({ fileName }: Props) {
 
   return (
     <>
-      <p>{fileName}</p>
+      <h2 className="text-lg">{fileName}</h2>
 
       <div role="tablist" className="tabs tabs-border">
         <Link

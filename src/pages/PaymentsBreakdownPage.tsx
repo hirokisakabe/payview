@@ -29,7 +29,7 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
               {paymentsBreakdown.breakdown.map((item, index) => (
                 <tr key={index}>
                   <td>{item.name}</td>
-                  <td>{item.total} 円</td>
+                  <td>{item.total.toLocaleString()} 円</td>
                 </tr>
               ))}
             </tbody>

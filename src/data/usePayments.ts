@@ -18,13 +18,15 @@ const paymentSchema = z.object({
 
 type Payment = z.infer<typeof paymentSchema>;
 
+type _Payment = Omit<Payment, "price"> & { price: number };
+
 export function usePayments({ fileName }: Props) {
   const files = useLiveQuery(() =>
     db.paymentFiles.where("fileName").equals(fileName).toArray(),
   );
   const file = files ? files[0] : undefined;
 
-  const [payments, setPayments] = useState<Payment[]>();
+  const [payments, setPayments] = useState<_Payment[]>();
 
   useEffect(() => {
     void (async () => {
@@ -67,7 +69,14 @@ export function usePayments({ fileName }: Props) {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
-      setPayments(_payments.filter((payment) => payment.name.length > 0));
+      setPayments(
+        _payments
+          .map((payment) => ({
+            ...payment,
+            price: parseInt(payment.price, 10),
+          }))
+          .filter((payment) => payment.name.length > 0),
+      );
     })();
   }, [file]);
 

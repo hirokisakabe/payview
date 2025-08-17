@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { usePaymentsBreakdown } from "../data/usePaymentsBreakdown";
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
+import { PaymentGroup } from "./PaymentGroup";
 
 type Props = {
   fileName: string;
@@ -52,51 +52,7 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
                   <td>{item.name}</td>
                   <td>{item.total} 円</td>
                   <td>
-                    <button
-                      className="btn btn-square"
-                      type="button"
-                      popoverTarget={`popover-${index}`}
-                      style={
-                        {
-                          anchorName: `--anchor-${index}`,
-                        } /* as React.CSSProperties */
-                      }
-                    >
-                      <EllipsisHorizontalIcon className="size-3" />
-                    </button>
-                    <ul
-                      className="dropdown menu rounded-box bg-base-100 w-full max-w-40 shadow-sm"
-                      popover="auto"
-                      id={`popover-${index}`}
-                      style={
-                        {
-                          positionAnchor: `--anchor-${index}`,
-                        } /* as React.CSSProperties */
-                      }
-                    >
-                      {[
-                        {
-                          groupName: "グループA",
-                        },
-                        {
-                          groupName: "グループB",
-                        },
-                        {
-                          groupName: "グループC",
-                        },
-                      ].map((group, groupIndex) => (
-                        <li key={groupIndex}>
-                          <button className="btn" type="button">
-                            {group.groupName}に移動
-                          </button>
-                        </li>
-                      ))}
-                      <li>
-                        <button className="btn" type="button">
-                          グループを新規に作成して追加
-                        </button>
-                      </li>
-                    </ul>
+                    <PaymentGroup breakdownItem={item} />
                   </td>
                 </tr>
               ))}

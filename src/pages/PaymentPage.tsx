@@ -40,6 +40,7 @@ export function PaymentPage({ fileName }: Props) {
           <table className="table">
             <thead>
               <tr>
+                <th>利用日</th>
                 <th>項目</th>
                 <th>金額</th>
               </tr>
@@ -47,6 +48,7 @@ export function PaymentPage({ fileName }: Props) {
             <tbody>
               {payments.payments.map((item, index) => (
                 <tr key={index}>
+                  <td>{item.date}</td>
                   <td>{item.name}</td>
                   <td>{item.price} 円</td>
                 </tr>

@@ -96,11 +96,6 @@ export function PaymentsBreakdownPage({ fileName }: Props) {
                           グループを新規に作成して追加
                         </button>
                       </li>
-                      <li>
-                        <button className="btn" type="button">
-                          グループから削除
-                        </button>
-                      </li>
                     </ul>
                   </td>
                 </tr>

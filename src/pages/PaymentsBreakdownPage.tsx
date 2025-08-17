@@ -6,39 +6,12 @@ type Props = {
   fileName: string;
 };
 
-const data01 = [
-  {
-    name: "Group A",
-    value: 400,
-  },
-  {
-    name: "Group B",
-    value: 300,
-  },
-  {
-    name: "Group C",
-    value: 300,
-  },
-  {
-    name: "Group D",
-    value: 200,
-  },
-  {
-    name: "Group E",
-    value: 278,
-  },
-  {
-    name: "Group F",
-    value: 189,
-  },
-];
-
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export function PaymentsBreakdownPage({ fileName }: Props) {
   const paymentsBreakdown = usePaymentsBreakdown({ fileName });
   const chartData =
-    paymentsBreakdown.breakdown?.splice(0, 10).map((item) => ({
+    paymentsBreakdown.breakdown?.slice(0, 10).map((item) => ({
       name: item.name,
       value: item.total,
     })) || [];

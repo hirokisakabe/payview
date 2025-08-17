@@ -67,7 +67,7 @@ export function usePayments({ fileName }: Props) {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
-      setPayments(_payments);
+      setPayments(_payments.filter((payment) => payment.name.length > 0));
     })();
   }, [file]);
 

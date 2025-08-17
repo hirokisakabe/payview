@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
 import { usePayments } from "../data/usePayments";
+import { Tabs } from "./components/Tabs";
 
 type Props = {
   fileName: string;
@@ -10,26 +10,7 @@ export function PaymentPage({ fileName }: Props) {
 
   return (
     <>
-      <h2 className="text-primary-content text-lg">{fileName}</h2>
-
-      <div role="tablist" className="tabs tabs-border">
-        <Link
-          role="tab"
-          className="tab tab-active"
-          to="/payments/$fileName"
-          params={{ fileName }}
-        >
-          支払い一覧
-        </Link>
-        <Link
-          role="tab"
-          className="tab"
-          to="/breakdown/$fileName"
-          params={{ fileName }}
-        >
-          内訳
-        </Link>
-      </div>
+      <Tabs fileName={fileName} activeTab="payments" />
 
       {payments.status === "loading" ? (
         <div className="mx-auto w-max">

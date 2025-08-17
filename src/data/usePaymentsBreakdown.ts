@@ -19,7 +19,7 @@ export function usePaymentsBreakdown({ fileName }: Props) {
         if (!acc[name]) {
           acc[name] = 0;
         }
-        acc[name] += parseInt(price, 10);
+        acc[name] += price;
         return acc;
       },
       {} as Record<string, number>,

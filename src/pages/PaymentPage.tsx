@@ -31,7 +31,7 @@ export function PaymentPage({ fileName }: Props) {
                 <tr key={index}>
                   <td>{item.date}</td>
                   <td>{item.name}</td>
-                  <td>{item.price} 円</td>
+                  <td>{item.price.toLocaleString()} 円</td>
                 </tr>
               ))}
             </tbody>

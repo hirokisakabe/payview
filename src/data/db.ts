@@ -3,10 +3,18 @@ import Dexie, { type EntityTable } from "dexie";
 interface PaymentFile {
   fileName: string;
   blob: Blob;
+  groupName?: string; // TODO としたほうが良い？
 }
+
+interface PaymentGroup { 
+  groupName: string;
+}
+
+
 
 const db = new Dexie("PaymentFileDatabase") as Dexie & {
   paymentFiles: EntityTable<PaymentFile, "fileName">;
+
 };
 
 db.version(1).stores({

@@ -73,7 +73,7 @@ export function PaymentPage({ fileName }: Props) {
       ) : (
         <>
           <LineChart
-            width={730}
+           width={1000}
             height={250}
             data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

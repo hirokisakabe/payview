@@ -7,9 +7,29 @@ type Props = {
   };
 };
 
+const groups = [
+  {
+    groupName: "グループA",
+  },
+  {
+    groupName: "グループB",
+  },
+  {
+    groupName: "グループC",
+  },
+];
+
 export function PaymentGroup({ breakdownItem }: Props) {
   const popoverId = `popover-${breakdownItem.name}`;
   const anchorName = `--anchor-${breakdownItem.name}`;
+
+  const handleAddItemToGroupButtonClick = (groupName: string) => {
+    // Add item to the group
+  };
+
+  const handleCreateNewGroupButtonClick = () => {
+    // Create a new group and add the item to it
+  };
 
   return (
     <>
@@ -35,25 +55,23 @@ export function PaymentGroup({ breakdownItem }: Props) {
           } /* as React.CSSProperties */
         }
       >
-        {[
-          {
-            groupName: "グループA",
-          },
-          {
-            groupName: "グループB",
-          },
-          {
-            groupName: "グループC",
-          },
-        ].map((group) => (
+        {groups.map((group) => (
           <li key={group.groupName}>
-            <button className="btn" type="button">
+            <button
+              className="btn"
+              type="button"
+              onClick={() => handleAddItemToGroupButtonClick(group.groupName)}
+            >
               {group.groupName}に移動
             </button>
           </li>
         ))}
         <li>
-          <button className="btn" type="button">
+          <button
+            className="btn"
+            type="button"
+            onClick={handleCreateNewGroupButtonClick}
+          >
             グループを新規に作成して追加
           </button>
         </li>

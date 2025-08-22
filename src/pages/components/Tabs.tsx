@@ -1,12 +1,11 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import clsx from "clsx";
+import { memo } from "react";
 
 type Props = {
   fileName: string;
-  activeTab: "payments" | "breakdown";
 };
 
-export function Tabs({ fileName, activeTab }: Props) {
+export const Tabs = memo(function Tabs({ fileName }: Props) {
   return (
     <>
       <h2 className="text-primary-content text-lg">{fileName}</h2>
@@ -14,18 +13,20 @@ export function Tabs({ fileName, activeTab }: Props) {
       <div role="tablist" className="tabs tabs-border">
         <Link
           role="tab"
-          className={clsx("tab", activeTab === "payments" && "tab-active")}
-          to="/payments/$fileName"
+          to="/$fileName/payments"
           params={{ fileName }}
+          activeProps={{ className: "tab tab-active" }}
+          inactiveProps={{ className: "tab" }}
         >
           支払い一覧
         </Link>
 
         <Link
           role="tab"
-          className={clsx("tab", activeTab === "breakdown" && "tab-active")}
-          to="/breakdown/$fileName"
+          to="/$fileName/breakdown"
           params={{ fileName }}
+          activeProps={{ className: "tab tab-active" }}
+          inactiveProps={{ className: "tab" }}
         >
           内訳
         </Link>
@@ -33,4 +34,4 @@ export function Tabs({ fileName, activeTab }: Props) {
       <Outlet />
     </>
   );
-}
+});

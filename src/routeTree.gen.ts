@@ -9,58 +9,78 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as FileNameRouteImport } from './routes/$fileName'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PaymentsFileNameRouteImport } from './routes/payments.$fileName'
-import { Route as BreakdownFileNameRouteImport } from './routes/breakdown.$fileName'
+import { Route as FileNamePaymentsRouteImport } from './routes/$fileName.payments'
+import { Route as FileNameBreakdownRouteImport } from './routes/$fileName.breakdown'
 
+const FileNameRoute = FileNameRouteImport.update({
+  id: '/$fileName',
+  path: '/$fileName',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PaymentsFileNameRoute = PaymentsFileNameRouteImport.update({
-  id: '/payments/$fileName',
-  path: '/payments/$fileName',
-  getParentRoute: () => rootRouteImport,
+const FileNamePaymentsRoute = FileNamePaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => FileNameRoute,
 } as any)
-const BreakdownFileNameRoute = BreakdownFileNameRouteImport.update({
-  id: '/breakdown/$fileName',
-  path: '/breakdown/$fileName',
-  getParentRoute: () => rootRouteImport,
+const FileNameBreakdownRoute = FileNameBreakdownRouteImport.update({
+  id: '/breakdown',
+  path: '/breakdown',
+  getParentRoute: () => FileNameRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/breakdown/$fileName': typeof BreakdownFileNameRoute
-  '/payments/$fileName': typeof PaymentsFileNameRoute
+  '/$fileName': typeof FileNameRouteWithChildren
+  '/$fileName/breakdown': typeof FileNameBreakdownRoute
+  '/$fileName/payments': typeof FileNamePaymentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/breakdown/$fileName': typeof BreakdownFileNameRoute
-  '/payments/$fileName': typeof PaymentsFileNameRoute
+  '/$fileName': typeof FileNameRouteWithChildren
+  '/$fileName/breakdown': typeof FileNameBreakdownRoute
+  '/$fileName/payments': typeof FileNamePaymentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/breakdown/$fileName': typeof BreakdownFileNameRoute
-  '/payments/$fileName': typeof PaymentsFileNameRoute
+  '/$fileName': typeof FileNameRouteWithChildren
+  '/$fileName/breakdown': typeof FileNameBreakdownRoute
+  '/$fileName/payments': typeof FileNamePaymentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/breakdown/$fileName' | '/payments/$fileName'
+  fullPaths: '/' | '/$fileName' | '/$fileName/breakdown' | '/$fileName/payments'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/breakdown/$fileName' | '/payments/$fileName'
-  id: '__root__' | '/' | '/breakdown/$fileName' | '/payments/$fileName'
+  to: '/' | '/$fileName' | '/$fileName/breakdown' | '/$fileName/payments'
+  id:
+    | '__root__'
+    | '/'
+    | '/$fileName'
+    | '/$fileName/breakdown'
+    | '/$fileName/payments'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BreakdownFileNameRoute: typeof BreakdownFileNameRoute
-  PaymentsFileNameRoute: typeof PaymentsFileNameRoute
+  FileNameRoute: typeof FileNameRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$fileName': {
+      id: '/$fileName'
+      path: '/$fileName'
+      fullPath: '/$fileName'
+      preLoaderRoute: typeof FileNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -68,27 +88,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/payments/$fileName': {
-      id: '/payments/$fileName'
-      path: '/payments/$fileName'
-      fullPath: '/payments/$fileName'
-      preLoaderRoute: typeof PaymentsFileNameRouteImport
-      parentRoute: typeof rootRouteImport
+    '/$fileName/payments': {
+      id: '/$fileName/payments'
+      path: '/payments'
+      fullPath: '/$fileName/payments'
+      preLoaderRoute: typeof FileNamePaymentsRouteImport
+      parentRoute: typeof FileNameRoute
     }
-    '/breakdown/$fileName': {
-      id: '/breakdown/$fileName'
-      path: '/breakdown/$fileName'
-      fullPath: '/breakdown/$fileName'
-      preLoaderRoute: typeof BreakdownFileNameRouteImport
-      parentRoute: typeof rootRouteImport
+    '/$fileName/breakdown': {
+      id: '/$fileName/breakdown'
+      path: '/breakdown'
+      fullPath: '/$fileName/breakdown'
+      preLoaderRoute: typeof FileNameBreakdownRouteImport
+      parentRoute: typeof FileNameRoute
     }
   }
 }
 
+interface FileNameRouteChildren {
+  FileNameBreakdownRoute: typeof FileNameBreakdownRoute
+  FileNamePaymentsRoute: typeof FileNamePaymentsRoute
+}
+
+const FileNameRouteChildren: FileNameRouteChildren = {
+  FileNameBreakdownRoute: FileNameBreakdownRoute,
+  FileNamePaymentsRoute: FileNamePaymentsRoute,
+}
+
+const FileNameRouteWithChildren = FileNameRoute._addFileChildren(
+  FileNameRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BreakdownFileNameRoute: BreakdownFileNameRoute,
-  PaymentsFileNameRoute: PaymentsFileNameRoute,
+  FileNameRoute: FileNameRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

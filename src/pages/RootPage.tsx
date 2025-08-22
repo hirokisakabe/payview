@@ -66,7 +66,7 @@ export function RootPage() {
             {files.map((file, index) => (
               <li key={index}>
                 <Link
-                  to="/payments/$fileName"
+                  to="/$fileName/payments"
                   params={{ fileName: file.fileName }}
                 >
                   {file.fileName}

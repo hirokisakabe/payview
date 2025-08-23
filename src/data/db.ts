@@ -1,8 +1,15 @@
 import Dexie, { type EntityTable } from "dexie";
 
+type Payment = {
+  name: string;
+  date: string;
+  price: number;
+  count: number;
+};
+
 interface PaymentFile {
   fileName: string;
-  blob: Blob;
+  payments: Payment[];
 }
 
 const db = new Dexie("PaymentFileDatabase") as Dexie & {
@@ -10,7 +17,7 @@ const db = new Dexie("PaymentFileDatabase") as Dexie & {
 };
 
 db.version(1).stores({
-  paymentFiles: "++fileName, blob",
+  paymentFiles: "fileName",
 });
 
 export type { PaymentFile };

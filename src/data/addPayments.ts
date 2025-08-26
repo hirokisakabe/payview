@@ -1,8 +1,11 @@
 import { db } from "./db";
+import { parsePaymentFile } from "./parsePaymentFile";
 
-export function addPayments(file: File) {
+export async function addPayments(file: File) {
+  const payments = await parsePaymentFile(file);
+
   return db.paymentFiles.add({
     fileName: file.name,
-    blob: file,
+    payments,
   });
 }

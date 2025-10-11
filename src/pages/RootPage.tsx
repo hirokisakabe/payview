@@ -57,6 +57,14 @@ export function RootPage() {
         >
           アップロード
         </button>
+        <div className="text-info mt-2 text-sm">
+          <p>
+            アップロードされたファイルは、ブラウザ内のIndexedDBに安全に保存されます。
+          </p>
+          <p>
+            データはお使いのブラウザ内にのみ保存され、外部に送信されることはありません。
+          </p>
+        </div>
       </div>
 
       <div>

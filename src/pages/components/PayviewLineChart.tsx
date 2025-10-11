@@ -21,9 +21,9 @@ export function PayviewLineChart({ data }: Props) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip />
+          <Tooltip formatter={(value) => [`${value.toLocaleString()} 円`]} />
           <Legend />
-          <Line type="monotone" dataKey="value" stroke="#8884d8" />
+          <Line type="monotone" dataKey="value" name="金額" stroke="#8884d8" />
         </LineChart>
       </ResponsiveContainer>
     </div>

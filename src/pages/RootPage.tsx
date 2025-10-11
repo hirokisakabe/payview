@@ -22,7 +22,24 @@ export function RootPage() {
       return;
     }
 
-    void (await addPayments(selectedFile));
+    const addPaymentsResult = await addPayments(selectedFile);
+
+    if (addPaymentsResult.isErr()) {
+      switch (addPaymentsResult.error.name) {
+        case "AddPaymentsConstraintError":
+          alert(
+            `ファイルは既に登録されています。別のファイルを選択してください。`,
+          );
+          break;
+        case "AddPaymentsUnknownError":
+          alert(
+            `ファイルの登録に失敗しました: ${addPaymentsResult.error.message}`,
+          );
+          break;
+      }
+
+      return;
+    }
 
     setSelectedFile(undefined);
     if (fileInputRef.current) {

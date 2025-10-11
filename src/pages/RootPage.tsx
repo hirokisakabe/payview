@@ -37,7 +37,7 @@ export function RootPage() {
         某銀行のクレジットカード利用明細をわかりやすく表示するアプリ
       </span>
       <div className="flex flex-col gap-2">
-        <h2 className="text-primary-content text-lg">ファイルアップロード</h2>
+        <h2 className="text-primary-content text-lg">ファイル登録</h2>
         <input
           className="file-input file-input-ghost"
           type="file"
@@ -55,11 +55,11 @@ export function RootPage() {
           onClick={() => void handleSubmit()}
           disabled={uploadButtonDisabled}
         >
-          アップロード
+          登録
         </button>
         <div className="text-info mt-2 text-sm">
           <p>
-            アップロードされたファイルは、ブラウザ内のIndexedDBに安全に保存されます。
+            登録されたファイルは、ブラウザ内のIndexedDBに安全に保存されます。
           </p>
           <p>
             データはお使いのブラウザ内にのみ保存され、外部に送信されることはありません。

@@ -31,7 +31,7 @@ export function PaymentPage({ fileName }: Props) {
           <h3 className="text-secondary-content text-lg">支払い金額の推移</h3>
           <PayviewLineChart data={chartData} />
 
-          <h3 className="text-secondary-content text-lg">内訳</h3>
+          <h3 className="text-secondary-content text-lg">支払い一覧</h3>
           <div className="overflow-x-auto">
             <table className="table">
               <thead>

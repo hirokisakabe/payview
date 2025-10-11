@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { addPayments } from "../data/addPayments";
 import { usePaymentsFiles } from "../data/usePaymentsFiles";
+import { deletePaymentFile } from "../data/deletePaymentFile";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 
@@ -30,6 +31,12 @@ export function RootPage() {
   };
 
   const uploadButtonDisabled = !selectedFile;
+
+  const handleDeleteFile = async (fileName: string) => {
+    if (confirm(`「${fileName}」を削除しますか？この操作は取り消せません。`)) {
+      await deletePaymentFile(fileName);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-10">
@@ -73,12 +80,22 @@ export function RootPage() {
           <ul className="menu bg-base-200 rounded-box w-full">
             {files.map((file, index) => (
               <li key={index}>
-                <Link
-                  to="/payments/$fileName"
-                  params={{ fileName: file.fileName }}
-                >
-                  {file.fileName}
-                </Link>
+                <div className="flex w-full items-center justify-between">
+                  <Link
+                    to="/payments/$fileName"
+                    params={{ fileName: file.fileName }}
+                    className="flex-1 text-left"
+                  >
+                    {file.fileName}
+                  </Link>
+                  <button
+                    className="btn btn-sm text-base-content/40 hover:text-error hover:bg-error/5 ml-2 border-none bg-transparent"
+                    onClick={() => void handleDeleteFile(file.fileName)}
+                    type="button"
+                  >
+                    ×
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

@@ -7,6 +7,7 @@ import {
 import { err, ok, ResultAsync } from "neverthrow";
 import {
   convertFileToCsvData,
+  ConvertFileToCsvInvalidCsvError,
   ConvertFileToCsvUnknownError,
 } from "./convertFileToCsvData";
 import {
@@ -14,7 +15,10 @@ import {
   CreatePaymentsConstraintError,
   CreatePaymentsUnknownError,
 } from "./createPayments";
-import { convertCsvDataToPaymentData } from "./convertCsvDataToPaymentData";
+import {
+  convertCsvDataToPaymentData,
+  ConvertCsvDataToPaymentDataInvalidSchemaError,
+} from "./convertCsvDataToPaymentData";
 
 vi.mock("./createPayments");
 vi.mock("./convertFileToCsvData");
@@ -67,7 +71,7 @@ test("正常系: データ登録", async () => {
   expect(result.isOk()).toBe(true);
 });
 
-test("異常系: ファイルのパースでエラーになった場合", async () => {
+test("異常系: ファイルのデータ変換でエラーになった場合", async () => {
   vi.mocked(convertFileToCsvData).mockReturnValue(
     ResultAsync.fromPromise(
       Promise.reject(new ConvertFileToCsvUnknownError("dummy_message")),
@@ -82,6 +86,34 @@ test("異常系: ファイルのパースでエラーになった場合", async 
 
   expect(result.isErr()).toBe(true);
   expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsUnknownError");
+});
+
+test("異常系: CSVデータとして読み込めなかった場合", async () => {
+  vi.mocked(convertFileToCsvData).mockReturnValue(
+    ResultAsync.fromPromise(
+      Promise.reject(new ConvertFileToCsvInvalidCsvError("dummy_message")),
+      (error) =>
+        new ConvertFileToCsvInvalidCsvError("dummy_message", {
+          cause: error,
+        }),
+    ),
+  );
+
+  const result = await addPayments(dummyFiles);
+
+  expect(result.isErr()).toBe(true);
+  expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsInvalidFileError");
+});
+
+test("異常系: データのパースでエラーになった場合", async () => {
+  vi.mocked(convertCsvDataToPaymentData).mockReturnValue(
+    err(new ConvertCsvDataToPaymentDataInvalidSchemaError("dummy_message")),
+  );
+
+  const result = await addPayments(dummyFiles);
+
+  expect(result.isErr()).toBe(true);
+  expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsInvalidFileError");
 });
 
 test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)", async () => {

@@ -4,7 +4,10 @@ import {
   createPayments,
   CreatePaymentsConstraintError,
 } from "./createPayments";
-import { convertFileToCsvData } from "./convertFileToCsvData";
+import {
+  convertFileToCsvData,
+  ConvertFileToCsvInvalidCsvError,
+} from "./convertFileToCsvData";
 import { createErr } from "../../utils/createErr";
 
 export async function addPayments(files: File[]) {
@@ -18,6 +21,14 @@ export async function addPayments(files: File[]) {
   );
 
   if (csvData.isErr()) {
+    if (csvData.error instanceof ConvertFileToCsvInvalidCsvError) {
+      return createErr(
+        new AddPaymentsInvalidFileError("CSVデータを読み取れませんでした。", {
+          cause: csvData.error,
+        }),
+      );
+    }
+
     return createErr(
       new AddPaymentsUnknownError("不明なエラーが発生しました。", {
         cause: csvData.error,
@@ -36,7 +47,7 @@ export async function addPayments(files: File[]) {
 
   if (paymentData.isErr()) {
     return createErr(
-      new AddPaymentsUnknownError("不明なエラーが発生しました。", {
+      new AddPaymentsInvalidFileError("ファイルの形式が不正です。", {
         cause: paymentData.error,
       }),
     );
@@ -80,6 +91,14 @@ export async function addPayments(files: File[]) {
 
 export class AddPaymentsUnknownError extends Error {
   override readonly name = "AddPaymentsUnknownError" as const;
+  constructor(message: string, options?: { cause: unknown }) {
+    super(message, options);
+    this.cause = options?.cause;
+  }
+}
+
+export class AddPaymentsInvalidFileError extends Error {
+  override readonly name = "AddPaymentsInvalidFileError" as const;
   constructor(message: string, options?: { cause: unknown }) {
     super(message, options);
     this.cause = options?.cause;

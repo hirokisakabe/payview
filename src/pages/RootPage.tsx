@@ -8,21 +8,23 @@ import clsx from "clsx";
 export function RootPage() {
   const files = usePaymentsFiles();
 
-  const [selectedFile, setSelectedFile] = useState<File>();
+  const [selectedFiles, setSelectedFiles] = useState<File[]>();
   const fileInputRef = useRef(null);
 
-  const handleFileSelect = (file: File | undefined) => {
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!selectedFile) {
+  const handleFilesSelect = (files: FileList | null) => {
+    if (!files || files.length === 0) {
       return;
     }
 
-    const addPaymentsResult = await addPayments(selectedFile);
+    setSelectedFiles(Array.from(files));
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedFiles) {
+      return;
+    }
+
+    const addPaymentsResult = await addPayments(selectedFiles);
 
     if (addPaymentsResult.isErr()) {
       switch (addPaymentsResult.error.name) {
@@ -41,13 +43,13 @@ export function RootPage() {
       return;
     }
 
-    setSelectedFile(undefined);
+    setSelectedFiles(undefined);
     if (fileInputRef.current) {
       (fileInputRef.current as HTMLInputElement).value = "";
     }
   };
 
-  const uploadButtonDisabled = !selectedFile;
+  const uploadButtonDisabled = !selectedFiles;
 
   const handleDeleteFile = async (fileName: string) => {
     if (confirm(`「${fileName}」を削除しますか？この操作は取り消せません。`)) {
@@ -67,8 +69,9 @@ export function RootPage() {
           type="file"
           name="file"
           accept=".csv"
+          multiple
           ref={fileInputRef}
-          onChange={(e) => handleFileSelect(e.target.files?.[0])}
+          onChange={(e) => handleFilesSelect(e.target.files)}
         />
         <button
           className={clsx(

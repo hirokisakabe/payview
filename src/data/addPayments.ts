@@ -4,22 +4,31 @@ import { parsePaymentFile } from "./parsePaymentFile";
 import { createErr } from "../utils/createErr";
 
 export async function addPayments(
-  file: File,
+  files: File[],
 ): Promise<Result<void, AddPaymentsUnknownError | AddPaymentsConstraintError>> {
   try {
-    const payments = await parsePaymentFile(file);
+    const insertData = await Promise.all(
+      files.map(async (file) => {
+        return {
+          fileName: file.name,
+          payments: await parsePaymentFile(file),
+        };
+      }),
+    );
 
-    await db.paymentFiles.add({
-      fileName: file.name,
-      payments,
-    });
+    await db.paymentFiles.bulkAdd(
+      insertData.map((data) => ({
+        fileName: data.fileName,
+        payments: data.payments,
+      })),
+    );
 
     return ok();
   } catch (error) {
     if (isDexieConstraintError(error)) {
       return createErr(
         new AddPaymentsConstraintError(
-          `ファイル「${file.name}」は既に登録されています。別のファイルを選択してください。`,
+          `ファイルは既に登録されています。別のファイルを選択してください。`,
           { cause: error },
         ),
       );

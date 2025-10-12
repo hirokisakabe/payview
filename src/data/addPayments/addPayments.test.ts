@@ -2,6 +2,7 @@ import { beforeEach, expect, test, vi } from "vitest";
 import {
   addPayments,
   AddPaymentsConstraintError,
+  AddPaymentsInvalidFileError,
   AddPaymentsUnknownError,
 } from "./addPayments";
 import { err, ok, ResultAsync } from "neverthrow";
@@ -85,7 +86,7 @@ test("異常系: ファイルのデータ変換でエラーになった場合", 
   const result = await addPayments(dummyFiles);
 
   expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsUnknownError");
+  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsUnknownError);
 });
 
 test("異常系: CSVデータとして読み込めなかった場合", async () => {
@@ -102,7 +103,7 @@ test("異常系: CSVデータとして読み込めなかった場合", async () 
   const result = await addPayments(dummyFiles);
 
   expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsInvalidFileError");
+  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsInvalidFileError);
 });
 
 test("異常系: データのパースでエラーになった場合", async () => {
@@ -113,7 +114,7 @@ test("異常系: データのパースでエラーになった場合", async () 
   const result = await addPayments(dummyFiles);
 
   expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsInvalidFileError");
+  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsInvalidFileError);
 });
 
 test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)", async () => {

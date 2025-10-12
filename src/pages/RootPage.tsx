@@ -1,5 +1,9 @@
 import { useRef, useState } from "react";
-import { addPayments } from "../data/addPayments/addPayments";
+import {
+  addPayments,
+  AddPaymentsConstraintError,
+  AddPaymentsInvalidFileError,
+} from "../data/addPayments/addPayments";
 import { usePaymentsFiles } from "../data/usePaymentsFiles";
 import { deletePaymentFile } from "../data/deletePaymentFile";
 import { Link } from "@tanstack/react-router";
@@ -27,22 +31,19 @@ export function RootPage() {
     const addPaymentsResult = await addPayments(selectedFiles);
 
     if (addPaymentsResult.isErr()) {
-      switch (addPaymentsResult.error.name) {
-        case "AddPaymentsInvalidFileError":
-          alert(`ファイルの形式が不正です: ${addPaymentsResult.error.message}`);
-          break;
-        case "AddPaymentsConstraintError":
-          alert(
-            `ファイルは既に登録されています。別のファイルを選択してください。`,
-          );
-          break;
-        case "AddPaymentsUnknownError":
-          alert(
-            `ファイルの登録に失敗しました: ${addPaymentsResult.error.message}`,
-          );
-          break;
+      if (addPaymentsResult.error instanceof AddPaymentsInvalidFileError) {
+        alert(`ファイルの形式が不正です: ${addPaymentsResult.error.message}`);
+        return;
       }
 
+      if (addPaymentsResult.error instanceof AddPaymentsConstraintError) {
+        alert(
+          "ファイルは既に登録されています。別のファイルを選択してください。",
+        );
+        return;
+      }
+
+      alert(`ファイルの登録に失敗しました: ${addPaymentsResult.error.message}`);
       return;
     }
 

@@ -99,7 +99,7 @@ export function RootPage() {
 
       <div>
         <h2 className="text-primary-content text-lg">ファイル一覧</h2>
-        {files && (
+        {files && files.length > 0 ? (
           <ul className="menu bg-base-200 rounded-box w-full">
             {files.map((file, index) => (
               <li key={index}>
@@ -122,6 +122,13 @@ export function RootPage() {
               </li>
             ))}
           </ul>
+        ) : (
+          <div className="bg-base-200 rounded-box text-base-content/60 w-full p-8 text-center">
+            <p>登録されているファイルがありません</p>
+            <p className="mt-2 text-sm">
+              上のフォームからCSVファイルを登録してください
+            </p>
+          </div>
         )}
       </div>
     </div>

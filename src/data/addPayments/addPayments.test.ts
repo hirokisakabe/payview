@@ -84,7 +84,7 @@ test("異常系: ファイルのパースでエラーになった場合", async 
   expect(result._unsafeUnwrapErr().name).toBe("AddPaymentsUnknownError");
 });
 
-test("異常系: IndexdDBへの登録でエラーが発生した場合(重複)", async () => {
+test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)", async () => {
   vi.mocked(createPayments).mockResolvedValue(
     err(new CreatePaymentsConstraintError("dummy_message")),
   );
@@ -95,7 +95,7 @@ test("異常系: IndexdDBへの登録でエラーが発生した場合(重複)",
   expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsConstraintError);
 });
 
-test("異常系: IndexdDBへの登録でエラーが発生した場合", async () => {
+test("異常系: IndexedDBへの登録でエラーが発生した場合", async () => {
   vi.mocked(createPayments).mockResolvedValue(
     err(new CreatePaymentsUnknownError("dummy_message")),
   );

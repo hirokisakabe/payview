@@ -28,6 +28,9 @@ export function RootPage() {
 
     if (addPaymentsResult.isErr()) {
       switch (addPaymentsResult.error.name) {
+        case "AddPaymentsInvalidFileError":
+          alert(`ファイルの形式が不正です: ${addPaymentsResult.error.message}`);
+          break;
         case "AddPaymentsConstraintError":
           alert(
             `ファイルは既に登録されています。別のファイルを選択してください。`,

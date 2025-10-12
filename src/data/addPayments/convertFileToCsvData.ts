@@ -1,10 +1,13 @@
 import { parse } from "csv-parse/browser/esm/sync";
 import Encoding from "encoding-japanese";
-import { ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 type Input = { file: File };
 type Output = { csvData: unknown[] };
-type Return = ResultAsync<Output, ConvertFileToCsvUnknownError>;
+type Return = ResultAsync<
+  Output,
+  ConvertFileToCsvUnknownError | ConvertFileToCsvInvalidCsvError
+>;
 
 export function convertFileToCsvData(input: Input): Return {
   return ResultAsync.fromPromise(
@@ -36,11 +39,29 @@ export function convertFileToCsvData(input: Input): Return {
       new ConvertFileToCsvUnknownError("不明なエラーが発生しました。", {
         cause: error,
       }),
-  );
+  ).andThen(({ csvData }) => {
+    if (csvData.length === 0) {
+      return err(
+        new ConvertFileToCsvInvalidCsvError(
+          "ファイルのデータを読み取れませんでした。",
+        ),
+      );
+    }
+
+    return ok({ csvData });
+  });
 }
 
 export class ConvertFileToCsvUnknownError extends Error {
   override readonly name = "ConvertFileToCsvUnknownError" as const;
+  constructor(message: string, options?: { cause: unknown }) {
+    super(message, options);
+    this.cause = options?.cause;
+  }
+}
+
+export class ConvertFileToCsvInvalidCsvError extends Error {
+  override readonly name = "ConvertFileToCsvInvalidCsvError" as const;
   constructor(message: string, options?: { cause: unknown }) {
     super(message, options);
     this.cause = options?.cause;

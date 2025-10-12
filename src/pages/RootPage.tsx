@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { addPayments } from "../data/addPayments";
+import { addPayments } from "../data/addPayments/addPayments";
 import { usePaymentsFiles } from "../data/usePaymentsFiles";
 import { deletePaymentFile } from "../data/deletePaymentFile";
 import { Link } from "@tanstack/react-router";

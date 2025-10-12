@@ -123,9 +123,11 @@ export function RootPage() {
             ))}
           </ul>
         ) : (
-          <div className="bg-base-200 rounded-box w-full p-8 text-center text-base-content/60">
+          <div className="bg-base-200 rounded-box text-base-content/60 w-full p-8 text-center">
             <p>登録されているファイルがありません</p>
-            <p className="text-sm mt-2">上のフォームからCSVファイルを登録してください</p>
+            <p className="mt-2 text-sm">
+              上のフォームからCSVファイルを登録してください
+            </p>
           </div>
         )}
       </div>

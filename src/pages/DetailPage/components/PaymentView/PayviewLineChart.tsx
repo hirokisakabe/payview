@@ -23,7 +23,13 @@ export function PayviewLineChart({ data }: Props) {
           <YAxis />
           <Tooltip formatter={(value) => [`${value.toLocaleString()} 円`]} />
           <Legend />
-          <Line type="monotone" dataKey="value" name="金額" stroke="#8884d8" />
+          <Line
+            type="monotone"
+            dataKey="value"
+            name="金額"
+            stroke="#8884d8"
+            isAnimationActive={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

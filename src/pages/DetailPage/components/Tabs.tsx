@@ -17,6 +17,7 @@ export function Tabs({ fileName, activeTab }: Props) {
           className={clsx("tab", activeTab === "payments" && "tab-active")}
           to="/payments/$fileName"
           params={{ fileName }}
+          search={{ tab: "payments" }}
         >
           支払い一覧
         </Link>
@@ -24,8 +25,9 @@ export function Tabs({ fileName, activeTab }: Props) {
         <Link
           role="tab"
           className={clsx("tab", activeTab === "breakdown" && "tab-active")}
-          to="/breakdown/$fileName"
+          to="/payments/$fileName"
           params={{ fileName }}
+          search={{ tab: "breakdown" }}
         >
           内訳
         </Link>

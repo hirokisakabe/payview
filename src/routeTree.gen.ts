@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PaymentsFileNameRouteImport } from './routes/payments.$fileName'
-import { Route as BreakdownFileNameRouteImport } from './routes/breakdown.$fileName'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,39 +22,30 @@ const PaymentsFileNameRoute = PaymentsFileNameRouteImport.update({
   path: '/payments/$fileName',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BreakdownFileNameRoute = BreakdownFileNameRouteImport.update({
-  id: '/breakdown/$fileName',
-  path: '/breakdown/$fileName',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/breakdown/$fileName': typeof BreakdownFileNameRoute
   '/payments/$fileName': typeof PaymentsFileNameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/breakdown/$fileName': typeof BreakdownFileNameRoute
   '/payments/$fileName': typeof PaymentsFileNameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/breakdown/$fileName': typeof BreakdownFileNameRoute
   '/payments/$fileName': typeof PaymentsFileNameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/breakdown/$fileName' | '/payments/$fileName'
+  fullPaths: '/' | '/payments/$fileName'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/breakdown/$fileName' | '/payments/$fileName'
-  id: '__root__' | '/' | '/breakdown/$fileName' | '/payments/$fileName'
+  to: '/' | '/payments/$fileName'
+  id: '__root__' | '/' | '/payments/$fileName'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BreakdownFileNameRoute: typeof BreakdownFileNameRoute
   PaymentsFileNameRoute: typeof PaymentsFileNameRoute
 }
 
@@ -75,19 +65,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentsFileNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/breakdown/$fileName': {
-      id: '/breakdown/$fileName'
-      path: '/breakdown/$fileName'
-      fullPath: '/breakdown/$fileName'
-      preLoaderRoute: typeof BreakdownFileNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BreakdownFileNameRoute: BreakdownFileNameRoute,
   PaymentsFileNameRoute: PaymentsFileNameRoute,
 }
 export const routeTree = rootRouteImport

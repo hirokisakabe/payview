@@ -1,5 +1,6 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import clsx from "clsx";
+import { TotalAmount } from "./TotalAmount";
 
 type Props = {
   fileName: string;
@@ -10,6 +11,8 @@ export function Tabs({ fileName, activeTab }: Props) {
   return (
     <>
       <h2 className="text-primary-content text-lg">{fileName}</h2>
+
+      <TotalAmount fileName={fileName} />
 
       <div role="tablist" className="tabs tabs-border">
         <Link

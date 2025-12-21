@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 type Props = {
   fileName: string;
-  activeTab: "payments" | "breakdown";
+  activeTab: "payments" | "breakdown" | "monthly";
 };
 
 export function Tabs({ fileName, activeTab }: Props) {
@@ -30,6 +30,16 @@ export function Tabs({ fileName, activeTab }: Props) {
           search={{ tab: "breakdown" }}
         >
           内訳
+        </Link>
+
+        <Link
+          role="tab"
+          className={clsx("tab", activeTab === "monthly" && "tab-active")}
+          to="/payments/$fileName"
+          params={{ fileName }}
+          search={{ tab: "monthly" }}
+        >
+          月別
         </Link>
       </div>
       <Outlet />

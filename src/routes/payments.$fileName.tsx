@@ -3,7 +3,7 @@ import { DetailPage } from "../pages/DetailPage/DetailPage";
 import { z } from "zod";
 
 const SearchSchema = z.object({
-  tab: z.enum(["payments", "breakdown"]).default("payments"),
+  tab: z.enum(["payments", "breakdown", "monthly"]).default("payments"),
 });
 
 export const Route = createFileRoute("/payments/$fileName")({

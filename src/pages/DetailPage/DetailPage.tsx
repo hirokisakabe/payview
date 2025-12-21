@@ -2,11 +2,10 @@ import { Tabs } from "./components/Tabs";
 import { Activity } from "react";
 import { PaymentBreakdownView } from "./components/PaymentBreakdownView/PaymentBreakdownView";
 import { PaymentView } from "./components/PaymentView/PaymentView";
-import { MonthlyBreakdownView } from "./components/MonthlyBreakdownView/MonthlyBreakdownView";
 
 type Props = {
   fileName: string;
-  activeTab: "payments" | "breakdown" | "monthly";
+  activeTab: "payments" | "breakdown";
 };
 
 export function DetailPage({ fileName, activeTab }: Props) {
@@ -20,10 +19,6 @@ export function DetailPage({ fileName, activeTab }: Props) {
 
       <Activity mode={activeTab === "breakdown" ? "visible" : "hidden"}>
         <PaymentBreakdownView fileName={fileName} />
-      </Activity>
-
-      <Activity mode={activeTab === "monthly" ? "visible" : "hidden"}>
-        <MonthlyBreakdownView fileName={fileName} />
       </Activity>
     </div>
   );

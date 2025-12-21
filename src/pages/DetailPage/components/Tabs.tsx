@@ -1,15 +1,18 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import clsx from "clsx";
+import { TotalAmount } from "./TotalAmount";
 
 type Props = {
   fileName: string;
-  activeTab: "payments" | "breakdown" | "monthly";
+  activeTab: "payments" | "breakdown";
 };
 
 export function Tabs({ fileName, activeTab }: Props) {
   return (
     <>
       <h2 className="text-primary-content text-lg">{fileName}</h2>
+
+      <TotalAmount fileName={fileName} />
 
       <div role="tablist" className="tabs tabs-border">
         <Link
@@ -30,16 +33,6 @@ export function Tabs({ fileName, activeTab }: Props) {
           search={{ tab: "breakdown" }}
         >
           内訳
-        </Link>
-
-        <Link
-          role="tab"
-          className={clsx("tab", activeTab === "monthly" && "tab-active")}
-          to="/payments/$fileName"
-          params={{ fileName }}
-          search={{ tab: "monthly" }}
-        >
-          月別
         </Link>
       </div>
       <Outlet />

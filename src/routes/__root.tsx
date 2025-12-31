@@ -6,9 +6,14 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <div className="mx-auto max-w-7xl px-10 pt-5">
-        <h1 className="mb-5 text-xl font-bold">
-          <Link to="/">payview</Link>
-        </h1>
+        <div className="mb-5 flex items-center justify-between">
+          <h1 className="text-xl font-bold">
+            <Link to="/">payview</Link>
+          </h1>
+          <Link to="/settings" className="btn btn-ghost btn-sm">
+            設定
+          </Link>
+        </div>
 
         <Outlet />
       </div>

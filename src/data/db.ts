@@ -12,13 +12,34 @@ interface PaymentFile {
   payments: Payment[];
 }
 
+interface Tag {
+  id: string;
+  name: string;
+  order: number;
+}
+
+interface TagRule {
+  id: string;
+  tagId: string;
+  pattern: string;
+  order: number;
+}
+
 const db = new Dexie("PaymentFileDatabase") as Dexie & {
   paymentFiles: EntityTable<PaymentFile, "fileName">;
+  tags: EntityTable<Tag, "id">;
+  tagRules: EntityTable<TagRule, "id">;
 };
 
 db.version(1).stores({
   paymentFiles: "fileName",
 });
 
-export type { PaymentFile };
+db.version(2).stores({
+  paymentFiles: "fileName",
+  tags: "id, order",
+  tagRules: "id, tagId, order",
+});
+
+export type { PaymentFile, Tag, TagRule };
 export { db };

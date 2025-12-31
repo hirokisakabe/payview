@@ -1,0 +1,104 @@
+import { Link } from "@tanstack/react-router";
+import { usePaymentsByTag } from "../../../../data/usePaymentsByTag";
+import { PayviewTagBarChart } from "./PayviewTagBarChart";
+
+type Props = {
+  fileName: string;
+};
+
+export function PaymentTagView({ fileName }: Props) {
+  const result = usePaymentsByTag({ fileName });
+
+  if (result.status === "loading") {
+    return (
+      <div className="mx-auto w-max">
+        <span className="loading loading-spinner loading-xl"></span>
+      </div>
+    );
+  }
+
+  const { breakdown } = result;
+  const taggedItems = breakdown.filter((item) => item.tag !== null);
+  const untaggedItems = breakdown.filter((item) => item.tag === null);
+
+  const chartData = taggedItems.slice(0, 20).map((item) => ({
+    name: item.tag?.name || "",
+    value: item.total,
+  }));
+
+  const hasNoTags = taggedItems.length === 0;
+
+  return (
+    <div className="flex flex-col gap-4">
+      {hasNoTags ? (
+        <div className="bg-base-200 rounded-box p-6 text-center">
+          <p className="text-base-content/60 mb-2">タグが設定されていません</p>
+          <Link to="/settings" className="btn btn-primary btn-sm">
+            タグを設定する
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div>
+            <h3 className="text-secondary-content mb-2 text-lg">
+              タグ別集計（上位20件）
+            </h3>
+            <PayviewTagBarChart data={chartData} />
+          </div>
+
+          <div>
+            <h3 className="text-secondary-content mb-2 text-lg">タグ別内訳</h3>
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>タグ</th>
+                    <th>件数</th>
+                    <th>金額</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {taggedItems.map((item) => (
+                    <tr key={item.tag?.id}>
+                      <td>
+                        <span className="badge badge-primary">
+                          {item.tag?.name}
+                        </span>
+                      </td>
+                      <td>{item.count} 件</td>
+                      <td>{item.total.toLocaleString()} 円</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
+
+      {untaggedItems.length > 0 && (
+        <div>
+          <h3 className="text-secondary-content mb-2 text-lg">未分類</h3>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>項目</th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                {untaggedItems.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.name}</td>
+                    <td>{item.total.toLocaleString()} 円</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -32,4 +32,11 @@ export default tseslint.config([
       globals: globals.browser,
     },
   },
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx"],
+    rules: {
+      "@typescript-eslint/unbound-method": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+    },
+  },
 ]);

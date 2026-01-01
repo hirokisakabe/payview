@@ -48,8 +48,7 @@ export function usePaymentsByTag({ fileName }: Props): UsePaymentsByTagResult {
       string,
       { tag: TagInfo; total: number; count: number }
     >();
-    const untaggedItems: { name: string; total: number }[] = [];
-    const untaggedTotals = new Map<string, number>();
+    const untaggedTotals = new Map<string, { total: number; count: number }>();
 
     for (const payment of payments.payments) {
       const tag = findTagForPayment(payment.name);
@@ -65,32 +64,31 @@ export function usePaymentsByTag({ fileName }: Props): UsePaymentsByTagResult {
         }
       } else {
         const existing = untaggedTotals.get(payment.name);
-        if (existing !== undefined) {
-          untaggedTotals.set(payment.name, existing + payment.price);
+        if (existing) {
+          existing.total += payment.price;
+          existing.count += 1;
         } else {
-          untaggedTotals.set(payment.name, payment.price);
+          untaggedTotals.set(payment.name, { total: payment.price, count: 1 });
         }
       }
     }
 
-    for (const [name, total] of untaggedTotals) {
-      untaggedItems.push({ name, total });
-    }
-
     const taggedBreakdown = Array.from(tagTotals.values());
-    taggedBreakdown.sort((a, b) => b.total - a.total);
-
-    untaggedItems.sort((a, b) => b.total - a.total);
-    const untaggedBreakdown: TagBreakdownItem[] = untaggedItems.map((item) => ({
+    const untaggedBreakdown: TagBreakdownItem[] = Array.from(
+      untaggedTotals.entries(),
+    ).map(([name, { total, count }]) => ({
       tag: null,
-      total: item.total,
-      count: 1,
-      name: item.name,
+      total,
+      count,
+      name,
     }));
+
+    const allBreakdown = [...taggedBreakdown, ...untaggedBreakdown];
+    allBreakdown.sort((a, b) => b.total - a.total);
 
     return {
       status: "completed" as const,
-      breakdown: [...taggedBreakdown, ...untaggedBreakdown],
+      breakdown: allBreakdown,
     };
   }, [payments, tagsResult]);
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { PaymentDetailTable } from "./PaymentDetailTable";
 
 type PaymentDetail = {
@@ -37,7 +38,11 @@ export function TagBreakdownRow({ item, index }: Props) {
       >
         <td>
           <span className="text-base-content/60 mr-2">
-            {isExpanded ? "▼" : "▶"}
+            {isExpanded ? (
+              <ChevronDownIcon className="inline h-4 w-4" />
+            ) : (
+              <ChevronRightIcon className="inline h-4 w-4" />
+            )}
           </span>
           {item.tag ? (
             <span className="badge badge-primary">{item.tag.name}</span>

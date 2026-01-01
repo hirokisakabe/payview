@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useFileNavigation } from "../hooks/useFileNavigation";
 
 type Props = {
@@ -22,11 +23,13 @@ export function FileNavigation({ fileName, activeTab }: Props) {
           search={{ tab: activeTab }}
           className="btn btn-ghost btn-sm"
         >
-          &larr; 前へ
+          <ArrowLeftIcon className="mr-1 inline h-4 w-4" />
+          前へ
         </Link>
       ) : (
         <button type="button" className="btn btn-ghost btn-sm" disabled>
-          &larr; 前へ
+          <ArrowLeftIcon className="mr-1 inline h-4 w-4" />
+          前へ
         </button>
       )}
 
@@ -41,11 +44,13 @@ export function FileNavigation({ fileName, activeTab }: Props) {
           search={{ tab: activeTab }}
           className="btn btn-ghost btn-sm"
         >
-          次へ &rarr;
+          次へ
+          <ArrowRightIcon className="ml-1 inline h-4 w-4" />
         </Link>
       ) : (
         <button type="button" className="btn btn-ghost btn-sm" disabled>
-          次へ &rarr;
+          次へ
+          <ArrowRightIcon className="ml-1 inline h-4 w-4" />
         </button>
       )}
     </div>

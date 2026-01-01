@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Bars2Icon } from "@heroicons/react/24/outline";
 import { type TagRule } from "../../../data/db";
 import { updateTagRule } from "../../../data/tags/updateTagRule";
 import { deleteTagRule } from "../../../data/tags/deleteTagRule";
@@ -58,7 +59,7 @@ export function TagRuleItem({ rule }: Props) {
         {...attributes}
         {...listeners}
       >
-        ⋮⋮
+        <Bars2Icon className="h-4 w-4" />
       </button>
 
       {isEditing ? (

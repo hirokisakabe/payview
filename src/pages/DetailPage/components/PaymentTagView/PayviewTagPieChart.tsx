@@ -1,11 +1,4 @@
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 type Props = {
   data: { name: string; value: number }[];
@@ -33,12 +26,12 @@ export function PayviewTagPieChart({ data }: Props) {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number) => [
-              `${value.toLocaleString()} 円`,
-              "金額",
-            ]}
+            formatter={(
+              value: number,
+              _name: string,
+              props: { payload?: { name: string; value: number } },
+            ) => [`${value.toLocaleString()} 円`, props.payload?.name ?? ""]}
           />
-          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>

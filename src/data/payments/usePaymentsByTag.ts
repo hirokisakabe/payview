@@ -11,11 +11,18 @@ type TagInfo = {
   name: string;
 } | null;
 
+type PaymentDetail = {
+  name: string;
+  date: string;
+  price: number;
+};
+
 type TagBreakdownItem = {
   tag: TagInfo;
   total: number;
   count: number;
   name?: string;
+  payments: PaymentDetail[];
 };
 
 type UsePaymentsByTagResult =
@@ -46,12 +53,20 @@ export function usePaymentsByTag({ fileName }: Props): UsePaymentsByTagResult {
 
     const tagTotals = new Map<
       string,
-      { tag: TagInfo; total: number; count: number }
+      { tag: TagInfo; total: number; count: number; payments: PaymentDetail[] }
     >();
-    const untaggedTotals = new Map<string, { total: number; count: number }>();
+    const untaggedTotals = new Map<
+      string,
+      { total: number; count: number; payments: PaymentDetail[] }
+    >();
 
     for (const payment of payments.payments) {
       const tag = findTagForPayment(payment.name);
+      const paymentDetail: PaymentDetail = {
+        name: payment.name,
+        date: payment.date,
+        price: payment.price,
+      };
 
       if (tag) {
         const key = tag.id;
@@ -59,16 +74,27 @@ export function usePaymentsByTag({ fileName }: Props): UsePaymentsByTagResult {
         if (existing) {
           existing.total += payment.price;
           existing.count += 1;
+          existing.payments.push(paymentDetail);
         } else {
-          tagTotals.set(key, { tag, total: payment.price, count: 1 });
+          tagTotals.set(key, {
+            tag,
+            total: payment.price,
+            count: 1,
+            payments: [paymentDetail],
+          });
         }
       } else {
         const existing = untaggedTotals.get(payment.name);
         if (existing) {
           existing.total += payment.price;
           existing.count += 1;
+          existing.payments.push(paymentDetail);
         } else {
-          untaggedTotals.set(payment.name, { total: payment.price, count: 1 });
+          untaggedTotals.set(payment.name, {
+            total: payment.price,
+            count: 1,
+            payments: [paymentDetail],
+          });
         }
       }
     }
@@ -76,11 +102,12 @@ export function usePaymentsByTag({ fileName }: Props): UsePaymentsByTagResult {
     const taggedBreakdown = Array.from(tagTotals.values());
     const untaggedBreakdown: TagBreakdownItem[] = Array.from(
       untaggedTotals.entries(),
-    ).map(([name, { total, count }]) => ({
+    ).map(([name, { total, count, payments }]) => ({
       tag: null,
       total,
       count,
       name,
+      payments,
     }));
 
     const allBreakdown = [...taggedBreakdown, ...untaggedBreakdown];

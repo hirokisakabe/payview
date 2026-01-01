@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { usePaymentsByTag } from "../../../../data/payments";
 import { PayviewTagBarChart } from "./PayviewTagBarChart";
+import { TagBreakdownRow } from "./TagBreakdownRow";
 
 type Props = {
   fileName: string;
@@ -57,21 +58,11 @@ export function PaymentTagView({ fileName }: Props) {
                 </thead>
                 <tbody>
                   {breakdown.map((item, index) => (
-                    <tr key={item.tag?.id || `untagged-${index}`}>
-                      <td>
-                        {item.tag ? (
-                          <span className="badge badge-primary">
-                            {item.tag.name}
-                          </span>
-                        ) : (
-                          <span className="text-base-content/60">
-                            {item.name}
-                          </span>
-                        )}
-                      </td>
-                      <td>{item.count} 件</td>
-                      <td>{item.total.toLocaleString()} 円</td>
-                    </tr>
+                    <TagBreakdownRow
+                      key={item.tag?.id || `untagged-${index}`}
+                      item={item}
+                      index={index}
+                    />
                   ))}
                 </tbody>
               </table>

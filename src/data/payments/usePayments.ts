@@ -6,8 +6,9 @@ type Props = {
 };
 
 export function usePayments({ fileName }: Props) {
-  const files = useLiveQuery(() =>
-    db.paymentFiles.where("fileName").equals(fileName).toArray(),
+  const files = useLiveQuery(
+    () => db.paymentFiles.where("fileName").equals(fileName).toArray(),
+    [fileName],
   );
   const file = files ? files[0] : undefined;
 

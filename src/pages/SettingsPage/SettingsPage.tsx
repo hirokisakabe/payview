@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { useTags } from "../../data/tags/useTags";
 import { TagList } from "./components/TagList";
 import { AddTagForm } from "./components/AddTagForm";
@@ -8,12 +7,7 @@ export function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Link to="/" className="btn btn-ghost btn-sm">
-          ← 戻る
-        </Link>
-        <h1 className="text-primary-content text-xl">タグ設定</h1>
-      </div>
+      <h1 className="text-primary-content text-xl">タグ設定</h1>
 
       <div className="text-info text-sm">
         <p>タグを設定すると、項目名に含まれる文言でグループ分けができます。</p>

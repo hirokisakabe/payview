@@ -7,6 +7,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import { formatYen } from "../../../../utils/formatYen";
 
 type Props = {
   data: { name: string; value: number }[];
@@ -21,12 +22,7 @@ export function PayviewCategoryBarChart({ data }: Props) {
         <BarChart data={data}>
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip
-            formatter={(value: number) => [
-              `${value.toLocaleString()} 円`,
-              "金額",
-            ]}
-          />
+          <Tooltip formatter={(value: number) => [formatYen(value), "金額"]} />
           <Bar dataKey="value">
             {data.map((item, index) => (
               <Cell key={item.name} fill={COLORS[index % COLORS.length]} />

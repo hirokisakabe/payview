@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { PaymentDetailTable } from "./PaymentDetailTable";
+import { formatYen } from "../../../../utils/formatYen";
 
 type PaymentDetail = {
   name: string;
@@ -51,7 +52,7 @@ export function CategoryBreakdownRow({ item, index }: Props) {
           )}
         </td>
         <td>{item.count} 件</td>
-        <td>{item.total.toLocaleString()} 円</td>
+        <td>{formatYen(item.total)}</td>
       </tr>
 
       {isExpanded && (

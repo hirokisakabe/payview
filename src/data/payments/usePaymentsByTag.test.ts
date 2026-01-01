@@ -144,10 +144,16 @@ test("正常系: どのパターンにもマッチしない場合、未タグと
     expect(result.current.breakdown).toHaveLength(1);
     expect(result.current.breakdown[0].tag).toBeNull();
     expect(result.current.breakdown[0].name).toBe("謎の支払い");
+    expect(result.current.breakdown[0].payments).toHaveLength(1);
+    expect(result.current.breakdown[0].payments[0]).toEqual({
+      name: "謎の支払い",
+      date: "2023-01-01",
+      price: 1000,
+    });
   }
 });
 
-test("正常系: 同一タグの支払いが合算される", () => {
+test("正常系: 同一タグの支払いが合算され、個別支払いがpaymentsに含まれる", () => {
   vi.mocked(usePayments).mockReturnValue({
     status: "completed",
     payments: [
@@ -177,6 +183,17 @@ test("正常系: 同一タグの支払いが合算される", () => {
   if (result.current.status === "completed") {
     expect(result.current.breakdown[0].total).toBe(3000);
     expect(result.current.breakdown[0].count).toBe(2);
+    expect(result.current.breakdown[0].payments).toHaveLength(2);
+    expect(result.current.breakdown[0].payments[0]).toEqual({
+      name: "スーパーA",
+      date: "2023-01-01",
+      price: 1000,
+    });
+    expect(result.current.breakdown[0].payments[1]).toEqual({
+      name: "スーパーB",
+      date: "2023-01-02",
+      price: 2000,
+    });
   }
 });
 

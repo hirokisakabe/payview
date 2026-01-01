@@ -75,7 +75,7 @@ export function usePaymentsByTag({ fileName }: Props): UsePaymentsByTagResult {
 
     const taggedBreakdown = Array.from(tagTotals.values());
     const untaggedBreakdown: TagBreakdownItem[] = Array.from(
-      untaggedTotals.entries()
+      untaggedTotals.entries(),
     ).map(([name, { total, count }]) => ({
       tag: null,
       total,

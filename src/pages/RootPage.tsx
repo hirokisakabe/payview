@@ -117,8 +117,8 @@ export function RootPage() {
         <h2 className="text-primary-content text-lg">ファイル一覧</h2>
         {files && files.length > 0 ? (
           <ul className="menu bg-base-200 rounded-box w-full">
-            {files.map((file, index) => (
-              <li key={index}>
+            {files.map((file) => (
+              <li key={file.fileName}>
                 <div className="flex w-full items-center justify-between">
                   <Link
                     to="/payments/$fileName"

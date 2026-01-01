@@ -6,7 +6,6 @@ export type { PaymentFile, Tag, TagRule } from "./db";
 export {
   usePayments,
   usePaymentsFiles,
-  usePaymentsBreakdown,
   usePaymentsByTag,
   deletePaymentFile,
   addPayments,

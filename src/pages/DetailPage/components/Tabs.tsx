@@ -4,7 +4,7 @@ import { TotalAmount } from "./TotalAmount";
 
 type Props = {
   fileName: string;
-  activeTab: "payments" | "breakdown" | "tags";
+  activeTab: "breakdown" | "payments";
 };
 
 export function Tabs({ fileName, activeTab }: Props) {
@@ -17,16 +17,6 @@ export function Tabs({ fileName, activeTab }: Props) {
       <div role="tablist" className="tabs tabs-border">
         <Link
           role="tab"
-          className={clsx("tab", activeTab === "payments" && "tab-active")}
-          to="/payments/$fileName"
-          params={{ fileName }}
-          search={{ tab: "payments" }}
-        >
-          支払い一覧
-        </Link>
-
-        <Link
-          role="tab"
           className={clsx("tab", activeTab === "breakdown" && "tab-active")}
           to="/payments/$fileName"
           params={{ fileName }}
@@ -37,12 +27,12 @@ export function Tabs({ fileName, activeTab }: Props) {
 
         <Link
           role="tab"
-          className={clsx("tab", activeTab === "tags" && "tab-active")}
+          className={clsx("tab", activeTab === "payments" && "tab-active")}
           to="/payments/$fileName"
           params={{ fileName }}
-          search={{ tab: "tags" }}
+          search={{ tab: "payments" }}
         >
-          タグ別
+          支払い一覧
         </Link>
       </div>
       <Outlet />

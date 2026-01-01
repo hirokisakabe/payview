@@ -90,7 +90,9 @@ export function RootPage() {
           登録
         </button>
         <div className="text-info mt-2 text-sm">
-          <p>マイページでWEB明細書をCSV形式で取得して登録してください。</p>
+          <p>
+            某銀行のマイページでWEB明細書をCSV形式で取得して、そのファイルを登録してください。
+          </p>
         </div>
         <div className="text-info mt-2 text-sm">
           <p>

@@ -1,6 +1,6 @@
 // Re-export from db
 export { db } from "./db";
-export type { PaymentFile, Category, CategoryRule } from "./db";
+export type { Payment, PaymentFile, Category, CategoryRule } from "./db";
 
 // Re-export from payments
 export {

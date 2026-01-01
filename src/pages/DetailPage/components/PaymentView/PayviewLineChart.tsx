@@ -8,6 +8,7 @@ import {
   Legend,
   Line,
 } from "recharts";
+import { formatYen } from "../../../../utils/formatYen";
 
 type Props = {
   data: { name: string; value: number }[];
@@ -21,7 +22,7 @@ export function PayviewLineChart({ data }: Props) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip formatter={(value) => [`${value.toLocaleString()} 円`]} />
+          <Tooltip formatter={(value) => [formatYen(value as number)]} />
           <Legend />
           <Line
             type="monotone"

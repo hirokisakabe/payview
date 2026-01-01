@@ -1,3 +1,5 @@
+import { formatYen } from "../../../../utils/formatYen";
+
 type PaymentDetail = {
   name: string;
   date: string;
@@ -24,7 +26,7 @@ export function PaymentDetailTable({ payments }: Props) {
             <tr key={`${payment.date}-${payment.name}-${idx}`}>
               <td>{payment.date}</td>
               <td>{payment.name}</td>
-              <td>{payment.price.toLocaleString()} 円</td>
+              <td>{formatYen(payment.price)}</td>
             </tr>
           ))}
         </tbody>

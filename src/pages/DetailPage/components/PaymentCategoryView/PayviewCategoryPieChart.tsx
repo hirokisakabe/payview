@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { formatYen } from "../../../../utils/formatYen";
 
 type Props = {
   data: { name: string; value: number }[];
@@ -30,7 +31,7 @@ export function PayviewCategoryPieChart({ data }: Props) {
               value: number,
               _name: string,
               props: { payload?: { name: string; value: number } },
-            ) => [`${value.toLocaleString()} 円`, props.payload?.name ?? ""]}
+            ) => [formatYen(value), props.payload?.name ?? ""]}
           />
         </PieChart>
       </ResponsiveContainer>

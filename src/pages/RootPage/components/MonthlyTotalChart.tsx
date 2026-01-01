@@ -8,6 +8,7 @@ import {
   Line,
 } from "recharts";
 import type { PaymentFile } from "../../../data";
+import { formatYen } from "../../../utils/formatYen";
 
 type Props = {
   files: PaymentFile[];
@@ -32,7 +33,7 @@ export function MonthlyTotalChart({ files }: Props) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip formatter={(value) => [`¥${value.toLocaleString()}`]} />
+          <Tooltip formatter={(value) => [formatYen(value as number)]} />
           <Line
             type="monotone"
             dataKey="value"

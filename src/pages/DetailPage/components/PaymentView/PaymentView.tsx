@@ -1,5 +1,6 @@
 import { usePayments } from "../../../../data/payments";
 import { PayviewLineChart } from "./PayviewLineChart";
+import { formatYen } from "../../../../utils/formatYen";
 
 type Props = {
   fileName: string;
@@ -46,7 +47,7 @@ export function PaymentView({ fileName }: Props) {
                   <tr key={index}>
                     <td>{item.date}</td>
                     <td>{item.name}</td>
-                    <td>{item.price.toLocaleString()} 円</td>
+                    <td>{formatYen(item.price)}</td>
                   </tr>
                 ))}
               </tbody>

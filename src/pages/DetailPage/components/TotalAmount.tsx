@@ -1,4 +1,5 @@
 import { usePayments } from "../../../data/payments";
+import { formatYen } from "../../../utils/formatYen";
 
 type Props = {
   fileName: string;
@@ -17,8 +18,6 @@ export function TotalAmount({ fileName }: Props) {
   );
 
   return (
-    <p className="text-secondary-content text-lg">
-      合計: {total.toLocaleString()} 円
-    </p>
+    <p className="text-secondary-content text-lg">合計: {formatYen(total)}</p>
   );
 }

@@ -10,6 +10,7 @@ import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { MonthlyTotalChart } from "./RootPage/components/MonthlyTotalChart";
+import { formatYen } from "../utils/formatYen";
 
 export function RootPage() {
   const files = usePaymentsFiles();
@@ -126,10 +127,9 @@ export function RootPage() {
                   >
                     <span>{file.fileName}</span>
                     <span className="text-base-content/60 ml-4">
-                      ¥
-                      {file.payments
-                        .reduce((acc, p) => acc + p.price, 0)
-                        .toLocaleString()}
+                      {formatYen(
+                        file.payments.reduce((acc, p) => acc + p.price, 0),
+                      )}
                     </span>
                   </Link>
                   <button

@@ -43,8 +43,8 @@ export function PaymentView({ fileName }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {payments.payments.map((item, index) => (
-                  <tr key={index}>
+                {payments.payments.map((item) => (
+                  <tr key={`${item.date}-${item.name}-${item.price}`}>
                     <td>{item.date}</td>
                     <td>{item.name}</td>
                     <td>{formatYen(item.price)}</td>

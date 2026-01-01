@@ -22,8 +22,8 @@ export function PaymentDetailTable({ payments }: Props) {
           </tr>
         </thead>
         <tbody>
-          {payments.map((payment, idx) => (
-            <tr key={`${payment.date}-${payment.name}-${idx}`}>
+          {payments.map((payment) => (
+            <tr key={`${payment.date}-${payment.name}-${payment.price}`}>
               <td>{payment.date}</td>
               <td>{payment.name}</td>
               <td>{formatYen(payment.price)}</td>

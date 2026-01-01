@@ -12,23 +12,23 @@ interface PaymentFile {
   payments: Payment[];
 }
 
-interface Tag {
+interface Category {
   id: string;
   name: string;
   order: number;
 }
 
-interface TagRule {
+interface CategoryRule {
   id: string;
-  tagId: string;
+  categoryId: string;
   pattern: string;
   order: number;
 }
 
 const db = new Dexie("PaymentFileDatabase") as Dexie & {
   paymentFiles: EntityTable<PaymentFile, "fileName">;
-  tags: EntityTable<Tag, "id">;
-  tagRules: EntityTable<TagRule, "id">;
+  categories: EntityTable<Category, "id">;
+  categoryRules: EntityTable<CategoryRule, "id">;
 };
 
 db.version(1).stores({
@@ -41,5 +41,26 @@ db.version(2).stores({
   tagRules: "id, tagId, order",
 });
 
-export type { PaymentFile, Tag, TagRule };
+db.version(3)
+  .stores({
+    paymentFiles: "fileName",
+    categories: "id, order",
+    categoryRules: "id, categoryId, order",
+    tags: null,
+    tagRules: null,
+  })
+  .upgrade(async (tx) => {
+    const oldTags = await tx.table("tags").toArray();
+    const oldTagRules = await tx.table("tagRules").toArray();
+
+    await tx.table("categories").bulkAdd(oldTags);
+    await tx.table("categoryRules").bulkAdd(
+      oldTagRules.map((rule: { tagId: string }) => ({
+        ...rule,
+        categoryId: rule.tagId,
+      })),
+    );
+  });
+
+export type { PaymentFile, Category, CategoryRule };
 export { db };

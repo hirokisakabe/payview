@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import clsx from "clsx";
 import { usePaymentsByTag } from "../../../../data/payments";
 import { PayviewTagBarChart } from "./PayviewTagBarChart";
+import { PayviewTagPieChart } from "./PayviewTagPieChart";
 import { TagBreakdownRow } from "./TagBreakdownRow";
+
+type ChartType = "bar" | "pie";
 
 type Props = {
   fileName: string;
 };
 
 export function PaymentTagView({ fileName }: Props) {
+  const [chartType, setChartType] = useState<ChartType>("bar");
   const result = usePaymentsByTag({ fileName });
 
   if (result.status === "loading") {
@@ -39,10 +45,38 @@ export function PaymentTagView({ fileName }: Props) {
       ) : (
         <>
           <div>
-            <h3 className="text-secondary-content mb-2 text-lg">
-              タグ別集計（上位20件）
-            </h3>
-            <PayviewTagBarChart data={chartData} />
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="text-secondary-content text-lg">
+                タグ別集計（上位20件）
+              </h3>
+              <div className="join">
+                <button
+                  type="button"
+                  className={clsx(
+                    "join-item btn btn-sm",
+                    chartType === "bar" && "btn-active",
+                  )}
+                  onClick={() => setChartType("bar")}
+                >
+                  棒グラフ
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    "join-item btn btn-sm",
+                    chartType === "pie" && "btn-active",
+                  )}
+                  onClick={() => setChartType("pie")}
+                >
+                  円グラフ
+                </button>
+              </div>
+            </div>
+            {chartType === "bar" ? (
+              <PayviewTagBarChart data={chartData} />
+            ) : (
+              <PayviewTagPieChart data={chartData} />
+            )}
           </div>
 
           <div>

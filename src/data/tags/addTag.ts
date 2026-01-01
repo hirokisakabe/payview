@@ -1,5 +1,6 @@
 import { ResultAsync } from "neverthrow";
 import { db } from "../db";
+import { getNextOrder } from "../utils/getNextOrder";
 
 type Input = { name: string };
 type Output = string;
@@ -8,8 +9,7 @@ export function addTag(input: Input): ResultAsync<Output, AddTagError> {
   return ResultAsync.fromPromise(
     (async () => {
       const id = crypto.randomUUID();
-      const maxOrder = await db.tags.orderBy("order").last();
-      const order = maxOrder ? maxOrder.order + 1 : 0;
+      const order = await getNextOrder("tags");
 
       await db.tags.add({
         id,

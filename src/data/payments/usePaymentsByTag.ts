@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { usePayments } from "./usePayments";
-import { useAllTagRules } from "./tags/useAllTagRules";
+import { useAllTagRules } from "../tags/useAllTagRules";
 
 type Props = {
   fileName: string;

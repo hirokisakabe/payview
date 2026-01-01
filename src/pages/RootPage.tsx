@@ -3,9 +3,9 @@ import {
   addPayments,
   AddPaymentsConstraintError,
   AddPaymentsInvalidFileError,
-} from "../data/addPayments/addPayments";
-import { usePaymentsFiles } from "../data/usePaymentsFiles";
-import { deletePaymentFile } from "../data/deletePaymentFile";
+} from "../data/payments/import/addPayments";
+import { usePaymentsFiles } from "../data/payments/usePaymentsFiles";
+import { deletePaymentFile } from "../data/payments/deletePaymentFile";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 

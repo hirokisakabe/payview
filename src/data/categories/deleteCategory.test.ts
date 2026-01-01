@@ -1,0 +1,55 @@
+import { beforeEach, expect, test, vi } from "vitest";
+import { deleteCategory, DeleteCategoryError } from "./deleteCategory";
+
+const { mockTransaction, mockCategoryRulesWhere, mockCategoriesDelete } =
+  vi.hoisted(() => ({
+    mockTransaction: vi.fn(),
+    mockCategoryRulesWhere: vi.fn(),
+    mockCategoriesDelete: vi.fn(),
+  }));
+
+vi.mock("../db", () => ({
+  db: {
+    transaction: mockTransaction,
+    categories: {
+      delete: mockCategoriesDelete,
+    },
+    categoryRules: {
+      where: mockCategoryRulesWhere,
+    },
+  },
+}));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+test("正常系: カテゴリと関連ルールが削除される", async () => {
+  mockTransaction.mockImplementation(async (_mode, _tables, callback) => {
+    await callback();
+  });
+  mockCategoryRulesWhere.mockReturnValue({
+    equals: vi.fn().mockReturnValue({
+      delete: vi.fn().mockResolvedValue(2),
+    }),
+  });
+  mockCategoriesDelete.mockResolvedValue(undefined);
+
+  const result = await deleteCategory({ id: "category-1" });
+
+  expect(result.isOk()).toBe(true);
+  expect(result._unsafeUnwrap()).toBe(undefined);
+  expect(mockTransaction).toHaveBeenCalled();
+});
+
+test("異常系: トランザクションでエラーが発生した場合", async () => {
+  mockTransaction.mockRejectedValue(new Error("Transaction Error"));
+
+  const result = await deleteCategory({ id: "category-1" });
+
+  expect(result.isErr()).toBe(true);
+  expect(result._unsafeUnwrapErr()).toBeInstanceOf(DeleteCategoryError);
+  expect(result._unsafeUnwrapErr().message).toBe(
+    "カテゴリの削除に失敗しました。",
+  );
+});

@@ -1,7 +1,7 @@
 import { Tabs } from "./components/Tabs";
 import { Activity } from "react";
 import { PaymentView } from "./components/PaymentView/PaymentView";
-import { PaymentTagView } from "./components/PaymentTagView/PaymentTagView";
+import { PaymentCategoryView } from "./components/PaymentCategoryView/PaymentCategoryView";
 
 type Props = {
   fileName: string;
@@ -14,7 +14,7 @@ export function DetailPage({ fileName, activeTab }: Props) {
       <Tabs fileName={fileName} activeTab={activeTab} />
 
       <Activity mode={activeTab === "breakdown" ? "visible" : "hidden"}>
-        <PaymentTagView fileName={fileName} />
+        <PaymentCategoryView fileName={fileName} />
       </Activity>
 
       <Activity mode={activeTab === "payments" ? "visible" : "hidden"}>

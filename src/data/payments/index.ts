@@ -1,6 +1,6 @@
 export { usePayments } from "./usePayments";
 export { usePaymentsFiles } from "./usePaymentsFiles";
-export { usePaymentsByTag } from "./usePaymentsByTag";
+export { usePaymentsByCategory } from "./usePaymentsByCategory";
 export { deletePaymentFile } from "./deletePaymentFile";
 export {
   addPayments,

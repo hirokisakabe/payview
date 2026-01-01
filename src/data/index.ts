@@ -1,12 +1,12 @@
 // Re-export from db
 export { db } from "./db";
-export type { PaymentFile, Tag, TagRule } from "./db";
+export type { PaymentFile, Category, CategoryRule } from "./db";
 
 // Re-export from payments
 export {
   usePayments,
   usePaymentsFiles,
-  usePaymentsByTag,
+  usePaymentsByCategory,
   deletePaymentFile,
   addPayments,
   AddPaymentsConstraintError,
@@ -14,28 +14,28 @@ export {
   AddPaymentsUnknownError,
 } from "./payments";
 
-// Re-export from tags
+// Re-export from categories
 export {
-  useTags,
-  useTagRules,
-  useAllTagRules,
-  addTag,
-  AddTagError,
-  updateTag,
-  UpdateTagError,
-  deleteTag,
-  DeleteTagError,
-  addTagRule,
-  AddTagRuleError,
-  updateTagRule,
-  UpdateTagRuleError,
-  deleteTagRule,
-  DeleteTagRuleError,
-  reorderTags,
-  ReorderTagsError,
-  reorderTagRules,
-  ReorderTagRulesError,
-} from "./tags";
+  useCategories,
+  useCategoryRules,
+  useAllCategoryRules,
+  addCategory,
+  AddCategoryError,
+  updateCategory,
+  UpdateCategoryError,
+  deleteCategory,
+  DeleteCategoryError,
+  addCategoryRule,
+  AddCategoryRuleError,
+  updateCategoryRule,
+  UpdateCategoryRuleError,
+  deleteCategoryRule,
+  DeleteCategoryRuleError,
+  reorderCategories,
+  ReorderCategoriesError,
+  reorderCategoryRules,
+  ReorderCategoryRulesError,
+} from "./categories";
 
 // Common types
 export type { QueryResult } from "./types";

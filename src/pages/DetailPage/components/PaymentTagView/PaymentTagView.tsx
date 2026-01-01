@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { usePaymentsByTag } from "../../../../data/payments/usePaymentsByTag";
+import { usePaymentsByTag } from "../../../../data/payments";
 import { PayviewTagBarChart } from "./PayviewTagBarChart";
 
 type Props = {

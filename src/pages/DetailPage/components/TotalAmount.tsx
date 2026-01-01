@@ -1,4 +1,4 @@
-import { usePayments } from "../../../data/payments/usePayments";
+import { usePayments } from "../../../data/payments";
 
 type Props = {
   fileName: string;

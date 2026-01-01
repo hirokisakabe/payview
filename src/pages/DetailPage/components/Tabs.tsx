@@ -4,7 +4,7 @@ import { TotalAmount } from "./TotalAmount";
 
 type Props = {
   fileName: string;
-  activeTab: "payments" | "breakdown";
+  activeTab: "payments" | "breakdown" | "tags";
 };
 
 export function Tabs({ fileName, activeTab }: Props) {
@@ -33,6 +33,16 @@ export function Tabs({ fileName, activeTab }: Props) {
           search={{ tab: "breakdown" }}
         >
           内訳
+        </Link>
+
+        <Link
+          role="tab"
+          className={clsx("tab", activeTab === "tags" && "tab-active")}
+          to="/payments/$fileName"
+          params={{ fileName }}
+          search={{ tab: "tags" }}
+        >
+          タグ別
         </Link>
       </div>
       <Outlet />

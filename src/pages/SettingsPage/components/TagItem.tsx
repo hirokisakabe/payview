@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+  ChevronRightIcon,
+  ChevronDownIcon,
+  Bars2Icon,
+} from "@heroicons/react/24/outline";
 import { type Tag } from "../../../data/db";
 import { updateTag } from "../../../data/tags/updateTag";
 import { deleteTag } from "../../../data/tags/deleteTag";
@@ -65,7 +70,7 @@ export function TagItem({ tag }: Props) {
           {...attributes}
           {...listeners}
         >
-          ⋮⋮
+          <Bars2Icon className="h-4 w-4" />
         </button>
 
         <button
@@ -73,7 +78,11 @@ export function TagItem({ tag }: Props) {
           className="btn btn-ghost btn-sm px-2"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          {isExpanded ? "▼" : "▶"}
+          {isExpanded ? (
+            <ChevronDownIcon className="h-4 w-4" />
+          ) : (
+            <ChevronRightIcon className="h-4 w-4" />
+          )}
         </button>
 
         {isEditing ? (

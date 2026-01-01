@@ -8,6 +8,7 @@ import {
 } from "../data/payments";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export function RootPage() {
   const files = usePaymentsFiles();
@@ -120,7 +121,7 @@ export function RootPage() {
                     onClick={() => void handleDeleteFile(file.fileName)}
                     type="button"
                   >
-                    ×
+                    <XMarkIcon className="h-4 w-4" />
                   </button>
                 </div>
               </li>

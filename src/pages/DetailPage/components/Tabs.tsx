@@ -1,5 +1,6 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import clsx from "clsx";
+import { FileNavigation } from "./FileNavigation";
 import { TotalAmount } from "./TotalAmount";
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 export function Tabs({ fileName, activeTab }: Props) {
   return (
     <>
-      <h2 className="text-primary-content text-lg">{fileName}</h2>
+      <FileNavigation fileName={fileName} activeTab={activeTab} />
 
       <TotalAmount fileName={fileName} />
 

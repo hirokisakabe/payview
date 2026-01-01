@@ -1,5 +1,5 @@
 import { ResultAsync } from "neverthrow";
-import { db } from "../db";
+import { db } from "../../db";
 import type { Payment } from "./paymentSchema";
 
 type Input = { fileName: string; payments: Payment[] }[];

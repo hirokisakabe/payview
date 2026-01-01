@@ -1,5 +1,6 @@
 import { ResultAsync } from "neverthrow";
 import { db } from "../db";
+import { getNextOrder } from "../utils/getNextOrder";
 
 type Input = { tagId: string; pattern: string };
 type Output = string;
@@ -8,12 +9,10 @@ export function addTagRule(input: Input): ResultAsync<Output, AddTagRuleError> {
   return ResultAsync.fromPromise(
     (async () => {
       const id = crypto.randomUUID();
-      const maxOrder = await db.tagRules
-        .where("tagId")
-        .equals(input.tagId)
-        .sortBy("order")
-        .then((rules) => rules[rules.length - 1]);
-      const order = maxOrder ? maxOrder.order + 1 : 0;
+      const order = await getNextOrder("tagRules", {
+        where: "tagId",
+        equals: input.tagId,
+      });
 
       await db.tagRules.add({
         id,

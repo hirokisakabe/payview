@@ -1,4 +1,4 @@
-import { usePaymentsBreakdown } from "../../../../data/usePaymentsBreakdown";
+import { usePaymentsBreakdown } from "../../../../data/payments";
 import { PayviewBarChart } from "./PayviewBarChart";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "./db";
+import { db } from "../db";
 
 type Props = {
   fileName: string;

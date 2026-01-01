@@ -8,7 +8,7 @@ import {
   convertFileToCsvData,
   ConvertFileToCsvInvalidCsvError,
 } from "./convertFileToCsvData";
-import { createErr } from "../../utils/createErr";
+import { createErr } from "../../../utils/createErr";
 
 export async function addPayments(files: File[]) {
   const csvData = await ResultAsync.combine(

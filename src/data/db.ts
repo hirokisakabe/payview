@@ -62,5 +62,5 @@ db.version(3)
     );
   });
 
-export type { PaymentFile, Category, CategoryRule };
+export type { Payment, PaymentFile, Category, CategoryRule };
 export { db };

@@ -9,6 +9,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { MonthlyTotalChart } from "./RootPage/components/MonthlyTotalChart";
 
 export function RootPage() {
   const files = usePaymentsFiles();
@@ -104,6 +105,13 @@ export function RootPage() {
         </div>
       </div>
 
+      {files && files.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h2 className="text-primary-content text-lg">月別推移</h2>
+          <MonthlyTotalChart files={files} />
+        </div>
+      )}
+
       <div>
         <h2 className="text-primary-content text-lg">ファイル一覧</h2>
         {files && files.length > 0 ? (
@@ -116,7 +124,13 @@ export function RootPage() {
                     params={{ fileName: file.fileName }}
                     className="flex-1 text-left"
                   >
-                    {file.fileName}
+                    <span>{file.fileName}</span>
+                    <span className="text-base-content/60 ml-4">
+                      ¥
+                      {file.payments
+                        .reduce((acc, p) => acc + p.price, 0)
+                        .toLocaleString()}
+                    </span>
                   </Link>
                   <button
                     className="btn btn-sm text-base-content/40 hover:text-error hover:bg-error/5 ml-2 border-none bg-transparent"

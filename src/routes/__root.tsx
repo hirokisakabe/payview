@@ -7,14 +7,14 @@ export const Route = createRootRoute({
     <>
       <div className="flex min-h-screen flex-col">
         <div className="mx-auto w-full max-w-7xl flex-grow px-10 pt-5 pb-10">
-          <div className="mb-5 flex items-center justify-between">
+          <header className="mb-5 flex items-center justify-between">
             <h1 className="text-xl font-bold">
               <Link to="/">payview</Link>
             </h1>
             <Link to="/settings" className="btn btn-ghost btn-sm">
               設定
             </Link>
-          </div>
+          </header>
 
           <Outlet />
         </div>

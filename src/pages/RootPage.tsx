@@ -65,7 +65,7 @@ export function RootPage() {
   return (
     <div className="flex flex-col gap-10">
       <span className="text-secondary-content text-sm">
-        某銀行のクレジットカード利用明細をわかりやすく表示するアプリ
+        某緑色の銀行のクレジットカード明細をわかりやすく表示するアプリ
       </span>
       <div className="flex flex-col gap-2">
         <h2 className="text-primary-content text-lg">ファイル登録</h2>

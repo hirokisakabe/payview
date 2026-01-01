@@ -2,7 +2,9 @@
 
 某緑色の銀行のクレジットカード明細をわかりやすく表示するアプリ
 
-![](./docs/images/screenshot.png)
+![](./docs/images/screenshot_0.png)
+
+![](./docs/images/screenshot_1.png)
 
 ## 注意事項
 

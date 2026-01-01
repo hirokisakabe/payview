@@ -18,21 +18,19 @@ export function PaymentTagView({ fileName }: Props) {
   }
 
   const { breakdown } = result;
-  const taggedItems = breakdown.filter((item) => item.tag !== null);
-  const untaggedItems = breakdown.filter((item) => item.tag === null);
 
-  const chartData = taggedItems.slice(0, 20).map((item) => ({
-    name: item.tag?.name || "",
+  const chartData = breakdown.slice(0, 20).map((item) => ({
+    name: item.tag?.name || item.name || "",
     value: item.total,
   }));
 
-  const hasNoTags = taggedItems.length === 0;
+  const hasNoData = breakdown.length === 0;
 
   return (
     <div className="flex flex-col gap-4">
-      {hasNoTags ? (
+      {hasNoData ? (
         <div className="bg-base-200 rounded-box p-6 text-center">
-          <p className="text-base-content/60 mb-2">タグが設定されていません</p>
+          <p className="text-base-content/60 mb-2">データがありません</p>
           <Link to="/settings" className="btn btn-primary btn-sm">
             タグを設定する
           </Link>
@@ -58,12 +56,18 @@ export function PaymentTagView({ fileName }: Props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {taggedItems.map((item) => (
-                    <tr key={item.tag?.id}>
+                  {breakdown.map((item, index) => (
+                    <tr key={item.tag?.id || `untagged-${index}`}>
                       <td>
-                        <span className="badge badge-primary">
-                          {item.tag?.name}
-                        </span>
+                        {item.tag ? (
+                          <span className="badge badge-primary">
+                            {item.tag.name}
+                          </span>
+                        ) : (
+                          <span className="text-base-content/60">
+                            {item.name}
+                          </span>
+                        )}
                       </td>
                       <td>{item.count} 件</td>
                       <td>{item.total.toLocaleString()} 円</td>
@@ -74,30 +78,6 @@ export function PaymentTagView({ fileName }: Props) {
             </div>
           </div>
         </>
-      )}
-
-      {untaggedItems.length > 0 && (
-        <div>
-          <h3 className="text-secondary-content mb-2 text-lg">未分類</h3>
-          <div className="overflow-x-auto">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>項目</th>
-                  <th>金額</th>
-                </tr>
-              </thead>
-              <tbody>
-                {untaggedItems.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>{item.total.toLocaleString()} 円</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
       )}
     </div>
   );

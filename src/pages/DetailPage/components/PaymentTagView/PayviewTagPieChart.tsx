@@ -25,6 +25,8 @@ export function PayviewTagPieChart({ data }: Props) {
             cx="50%"
             cy="50%"
             outerRadius={100}
+            startAngle={90}
+            endAngle={-270}
           >
             {data.map((item, index) => (
               <Cell key={item.name} fill={COLORS[index % COLORS.length]} />

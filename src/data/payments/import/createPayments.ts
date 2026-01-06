@@ -24,7 +24,22 @@ export async function createPayments(items: Input): Promise<void> {
 }
 
 function isDexieConstraintError(error: unknown): boolean {
-  return error instanceof Error && error.name === "ConstraintError";
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  // Direct ConstraintError
+  if (error.name === "ConstraintError") {
+    return true;
+  }
+
+  // BulkError from bulkAdd - check if any failure is a ConstraintError
+  if (error.name === "BulkError" && "failures" in error) {
+    const failures = (error as { failures: Error[] }).failures;
+    return failures.some((f) => f.name === "ConstraintError");
+  }
+
+  return false;
 }
 
 export class CreatePaymentsConstraintError extends Error {

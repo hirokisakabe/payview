@@ -5,7 +5,6 @@ import {
   AddPaymentsInvalidFileError,
   AddPaymentsUnknownError,
 } from "./addPayments";
-import { err, ok, ResultAsync } from "neverthrow";
 import {
   convertFileToCsvData,
   ConvertFileToCsvInvalidCsvError,
@@ -33,108 +32,81 @@ const dummyFiles = [
 beforeEach(() => {
   vi.clearAllMocks();
 
-  vi.mocked(convertFileToCsvData).mockReturnValue(
-    ResultAsync.fromSafePromise(
-      Promise.resolve({
-        csvData: [
-          {
-            date: "2023-01-01",
-            name: "Test",
-            price: 100,
-            count: 1,
-          },
-        ],
-      }),
-    ),
-  );
+  vi.mocked(convertFileToCsvData).mockResolvedValue({
+    csvData: [
+      {
+        date: "2023-01-01",
+        name: "Test",
+        price: 100,
+        count: 1,
+      },
+    ],
+  });
 
-  vi.mocked(convertCsvDataToPaymentData).mockReturnValue(
-    ok({
-      payments: [
-        {
-          date: "2023-01-01",
-          name: "Test",
-          price: 100,
-          count: 1,
-        },
-      ],
-    }),
-  );
+  vi.mocked(convertCsvDataToPaymentData).mockReturnValue({
+    payments: [
+      {
+        date: "2023-01-01",
+        name: "Test",
+        price: 100,
+        count: 1,
+      },
+    ],
+  });
 
-  vi.mocked(createPayments).mockReturnValue(
-    ResultAsync.fromSafePromise(Promise.resolve(undefined)),
-  );
+  vi.mocked(createPayments).mockResolvedValue(undefined);
 });
 
 test("正常系: データ登録", async () => {
-  const result = await addPayments(dummyFiles);
-
-  expect(result.isOk()).toBe(true);
+  await expect(addPayments(dummyFiles)).resolves.toBeUndefined();
 });
 
 test("異常系: ファイルのデータ変換でエラーになった場合", async () => {
-  vi.mocked(convertFileToCsvData).mockReturnValue(
-    ResultAsync.fromPromise(
-      Promise.reject(new ConvertFileToCsvUnknownError("dummy_message")),
-      (error) =>
-        new ConvertFileToCsvUnknownError("dummy_message", {
-          cause: error,
-        }),
-    ),
+  vi.mocked(convertFileToCsvData).mockRejectedValue(
+    new ConvertFileToCsvUnknownError("dummy_message"),
   );
 
-  const result = await addPayments(dummyFiles);
-
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsUnknownError);
+  await expect(addPayments(dummyFiles)).rejects.toThrow(
+    AddPaymentsUnknownError,
+  );
 });
 
 test("異常系: CSVデータとして読み込めなかった場合", async () => {
-  vi.mocked(convertFileToCsvData).mockReturnValue(
-    ResultAsync.fromPromise(
-      Promise.reject(new ConvertFileToCsvInvalidCsvError("dummy_message")),
-      (error) =>
-        new ConvertFileToCsvInvalidCsvError("dummy_message", {
-          cause: error,
-        }),
-    ),
+  vi.mocked(convertFileToCsvData).mockRejectedValue(
+    new ConvertFileToCsvInvalidCsvError("dummy_message"),
   );
 
-  const result = await addPayments(dummyFiles);
-
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsInvalidFileError);
+  await expect(addPayments(dummyFiles)).rejects.toThrow(
+    AddPaymentsInvalidFileError,
+  );
 });
 
 test("異常系: データのパースでエラーになった場合", async () => {
-  vi.mocked(convertCsvDataToPaymentData).mockReturnValue(
-    err(new ConvertCsvDataToPaymentDataInvalidSchemaError("dummy_message")),
+  vi.mocked(convertCsvDataToPaymentData).mockImplementation(() => {
+    throw new ConvertCsvDataToPaymentDataInvalidSchemaError("dummy_message");
+  });
+
+  await expect(addPayments(dummyFiles)).rejects.toThrow(
+    AddPaymentsInvalidFileError,
   );
-
-  const result = await addPayments(dummyFiles);
-
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsInvalidFileError);
 });
 
 test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)", async () => {
-  vi.mocked(createPayments).mockResolvedValue(
-    err(new CreatePaymentsConstraintError("dummy_message")),
+  vi.mocked(createPayments).mockRejectedValue(
+    new CreatePaymentsConstraintError("dummy_message"),
   );
 
-  const result = await addPayments(dummyFiles);
-
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsConstraintError);
+  await expect(addPayments(dummyFiles)).rejects.toThrow(
+    AddPaymentsConstraintError,
+  );
 });
 
 test("異常系: IndexedDBへの登録でエラーが発生した場合", async () => {
-  vi.mocked(createPayments).mockResolvedValue(
-    err(new CreatePaymentsUnknownError("dummy_message")),
+  vi.mocked(createPayments).mockRejectedValue(
+    new CreatePaymentsUnknownError("dummy_message"),
   );
 
-  const result = await addPayments(dummyFiles);
-
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).instanceOf(AddPaymentsUnknownError);
+  await expect(addPayments(dummyFiles)).rejects.toThrow(
+    AddPaymentsUnknownError,
+  );
 });

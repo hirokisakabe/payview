@@ -34,15 +34,15 @@ export function CategoryItem({ category }: Props) {
   const handleUpdate = async () => {
     if (!editName.trim()) return;
 
-    const result = await updateCategory({
-      id: category.id,
-      name: editName.trim(),
-    });
-    if (result.isErr()) {
-      alert(result.error.message);
-      return;
+    try {
+      await updateCategory({
+        id: category.id,
+        name: editName.trim(),
+      });
+      setIsEditing(false);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "エラーが発生しました");
     }
-    setIsEditing(false);
   };
 
   const handleDelete = async () => {
@@ -54,9 +54,10 @@ export function CategoryItem({ category }: Props) {
       return;
     }
 
-    const result = await deleteCategory({ id: category.id });
-    if (result.isErr()) {
-      alert(result.error.message);
+    try {
+      await deleteCategory({ id: category.id });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "エラーが発生しました");
     }
   };
 

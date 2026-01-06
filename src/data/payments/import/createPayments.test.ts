@@ -22,14 +22,13 @@ beforeEach(() => {
 test("正常系: 支払いデータがDBに登録される", async () => {
   vi.mocked(db.paymentFiles.bulkAdd).mockResolvedValue(undefined as never);
 
-  const result = await createPayments([
+  await createPayments([
     {
       fileName: "test.csv",
       payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
     },
   ]);
 
-  expect(result.isOk()).toBe(true);
   expect(db.paymentFiles.bulkAdd).toHaveBeenCalledWith([
     {
       fileName: "test.csv",
@@ -38,42 +37,52 @@ test("正常系: 支払いデータがDBに登録される", async () => {
   ]);
 });
 
-test("異常系: 重複ファイルの場合、CreatePaymentsConstraintErrorを返す", async () => {
+test("異常系: 重複ファイルの場合、CreatePaymentsConstraintErrorをthrowする", async () => {
   const constraintError = new Error("ConstraintError");
   constraintError.name = "ConstraintError";
   vi.mocked(db.paymentFiles.bulkAdd).mockRejectedValue(constraintError);
 
-  const result = await createPayments([
-    {
-      fileName: "duplicate.csv",
-      payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
-    },
-  ]);
+  await expect(
+    createPayments([
+      {
+        fileName: "duplicate.csv",
+        payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+      },
+    ]),
+  ).rejects.toThrow(CreatePaymentsConstraintError);
 
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).toBeInstanceOf(
-    CreatePaymentsConstraintError,
-  );
-  expect(result._unsafeUnwrapErr().message).toBe(
+  await expect(
+    createPayments([
+      {
+        fileName: "duplicate.csv",
+        payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+      },
+    ]),
+  ).rejects.toThrow(
     "ファイルは既に登録されています。別のファイルを選択してください。",
   );
 });
 
-test("異常系: その他のエラーの場合、CreatePaymentsUnknownErrorを返す", async () => {
+test("異常系: その他のエラーの場合、CreatePaymentsUnknownErrorをthrowする", async () => {
   vi.mocked(db.paymentFiles.bulkAdd).mockRejectedValue(
     new Error("Unknown error"),
   );
 
-  const result = await createPayments([
-    {
-      fileName: "test.csv",
-      payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
-    },
-  ]);
+  await expect(
+    createPayments([
+      {
+        fileName: "test.csv",
+        payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+      },
+    ]),
+  ).rejects.toThrow(CreatePaymentsUnknownError);
 
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).toBeInstanceOf(CreatePaymentsUnknownError);
-  expect(result._unsafeUnwrapErr().message).toBe(
-    "不明なエラーが発生しました。",
-  );
+  await expect(
+    createPayments([
+      {
+        fileName: "test.csv",
+        payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+      },
+    ]),
+  ).rejects.toThrow("不明なエラーが発生しました。");
 });

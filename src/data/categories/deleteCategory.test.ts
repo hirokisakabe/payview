@@ -35,21 +35,18 @@ test("正常系: カテゴリと関連ルールが削除される", async () => 
   });
   mockCategoriesDelete.mockResolvedValue(undefined);
 
-  const result = await deleteCategory({ id: "category-1" });
+  await deleteCategory({ id: "category-1" });
 
-  expect(result.isOk()).toBe(true);
-  expect(result._unsafeUnwrap()).toBe(undefined);
   expect(mockTransaction).toHaveBeenCalled();
 });
 
 test("異常系: トランザクションでエラーが発生した場合", async () => {
   mockTransaction.mockRejectedValue(new Error("Transaction Error"));
 
-  const result = await deleteCategory({ id: "category-1" });
-
-  expect(result.isErr()).toBe(true);
-  expect(result._unsafeUnwrapErr()).toBeInstanceOf(DeleteCategoryError);
-  expect(result._unsafeUnwrapErr().message).toBe(
+  await expect(deleteCategory({ id: "category-1" })).rejects.toThrow(
+    DeleteCategoryError,
+  );
+  await expect(deleteCategory({ id: "category-1" })).rejects.toThrow(
     "カテゴリの削除に失敗しました。",
   );
 });

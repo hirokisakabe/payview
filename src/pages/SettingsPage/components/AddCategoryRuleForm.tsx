@@ -13,18 +13,17 @@ export function AddCategoryRuleForm({ categoryId }: Props) {
     if (!pattern.trim()) return;
 
     setIsSubmitting(true);
-    const result = await addCategoryRule({
-      categoryId,
-      pattern: pattern.trim(),
-    });
-    setIsSubmitting(false);
-
-    if (result.isErr()) {
-      alert(result.error.message);
-      return;
+    try {
+      await addCategoryRule({
+        categoryId,
+        pattern: pattern.trim(),
+      });
+      setPattern("");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setPattern("");
   };
 
   return (

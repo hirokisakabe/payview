@@ -99,3 +99,43 @@ test("異常系: パース中にエラーが発生した場合、ConvertFileToCs
     ConvertFileToCsvUnknownError,
   );
 });
+
+test("正常系: 確定前フォーマット（13カラム）のCSVがパースされる", async () => {
+  // 確定前フォーマットのCSVデータ
+  const mockCsvData = [
+    {
+      date: "2025/12/31",
+      name: "バロー",
+      holder: "ご本人",
+      paymentMethod: "1回払い",
+      noname1: "",
+      billingMonth: "'26/01",
+      price: "6350",
+      priceJpy: "6350",
+      noname2: "",
+      foreignAmount: "",
+      currency: "",
+      exchangeRate: "",
+      exchangeDate: "",
+    },
+  ];
+  // 確定前フォーマットの文字列（13カラム）をシミュレート
+  const newFormatCsv =
+    "2025/12/31,バロー,ご本人,1回払い,,'26/01,6350,6350,,,,,";
+  vi.mocked(Encoding.convert).mockReturnValue(newFormatCsv as never);
+  vi.mocked(parse).mockReturnValue(mockCsvData as never);
+
+  const file = createMockFile(newFormatCsv, "test.csv");
+  const result = await convertFileToCsvData({ file });
+
+  expect(result.isOk()).toBe(true);
+  // 確定前フォーマットはcount=1で正規化される
+  expect(result._unsafeUnwrap().csvData).toEqual([
+    {
+      date: "2025/12/31",
+      name: "バロー",
+      price: "6350",
+      count: "1",
+    },
+  ]);
+});

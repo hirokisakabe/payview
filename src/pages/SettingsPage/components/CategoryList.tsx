@@ -46,9 +46,13 @@ export function CategoryList({ categories }: Props) {
     const [removed] = newOrder.splice(oldIndex, 1);
     newOrder.splice(newIndex, 0, removed);
 
-    await reorderCategories({
-      categoryIds: newOrder.map((category) => category.id),
-    });
+    try {
+      await reorderCategories({
+        categoryIds: newOrder.map((category) => category.id),
+      });
+    } catch {
+      alert("カテゴリの並び替えに失敗しました。");
+    }
   };
 
   return (

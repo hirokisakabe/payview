@@ -12,8 +12,8 @@ export function AddCategoryForm() {
     try {
       await addCategory({ name: name.trim() });
       setName("");
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } catch {
+      alert("カテゴリの追加に失敗しました。");
     } finally {
       setIsSubmitting(false);
     }

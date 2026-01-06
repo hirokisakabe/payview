@@ -45,5 +45,5 @@ test("異常系: トランザクションでエラーが発生した場合", asy
 
   await expect(
     reorderCategories({ categoryIds: ["category-1"] }),
-  ).rejects.toThrow("カテゴリの並び替えに失敗しました。");
+  ).rejects.toThrow("Transaction Error");
 });

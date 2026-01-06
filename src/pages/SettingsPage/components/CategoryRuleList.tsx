@@ -42,7 +42,11 @@ export function CategoryRuleList({ rules }: Props) {
     const [removed] = newOrder.splice(oldIndex, 1);
     newOrder.splice(newIndex, 0, removed);
 
-    await reorderCategoryRules({ ruleIds: newOrder.map((rule) => rule.id) });
+    try {
+      await reorderCategoryRules({ ruleIds: newOrder.map((rule) => rule.id) });
+    } catch {
+      alert("ルールの並び替えに失敗しました。");
+    }
   };
 
   return (

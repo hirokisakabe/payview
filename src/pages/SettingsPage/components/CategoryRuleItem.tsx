@@ -31,8 +31,8 @@ export function CategoryRuleItem({ rule }: Props) {
         pattern: editPattern.trim(),
       });
       setIsEditing(false);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } catch {
+      alert("ルールの更新に失敗しました。");
     }
   };
 
@@ -43,8 +43,8 @@ export function CategoryRuleItem({ rule }: Props) {
 
     try {
       await deleteCategoryRule({ id: rule.id });
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } catch {
+      alert("ルールの削除に失敗しました。");
     }
   };
 

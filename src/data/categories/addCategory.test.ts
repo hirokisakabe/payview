@@ -56,7 +56,5 @@ test("異常系: DB操作でエラーが発生した場合", async () => {
     last: vi.fn().mockRejectedValue(new Error("DB Error")),
   } as never);
 
-  await expect(addCategory({ name: "エラー" })).rejects.toThrow(
-    "カテゴリの追加に失敗しました。",
-  );
+  await expect(addCategory({ name: "エラー" })).rejects.toThrow("DB Error");
 });

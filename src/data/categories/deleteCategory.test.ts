@@ -44,6 +44,6 @@ test("異常系: トランザクションでエラーが発生した場合", asy
   mockTransaction.mockRejectedValue(new Error("Transaction Error"));
 
   await expect(deleteCategory({ id: "category-1" })).rejects.toThrow(
-    "カテゴリの削除に失敗しました。",
+    "Transaction Error",
   );
 });

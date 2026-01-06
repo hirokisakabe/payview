@@ -40,8 +40,8 @@ export function CategoryItem({ category }: Props) {
         name: editName.trim(),
       });
       setIsEditing(false);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } catch {
+      alert("カテゴリの更新に失敗しました。");
     }
   };
 
@@ -56,8 +56,8 @@ export function CategoryItem({ category }: Props) {
 
     try {
       await deleteCategory({ id: category.id });
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } catch {
+      alert("カテゴリの削除に失敗しました。");
     }
   };
 

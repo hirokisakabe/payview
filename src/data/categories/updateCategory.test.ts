@@ -32,5 +32,5 @@ test("異常系: DB操作でエラーが発生した場合", async () => {
 
   await expect(
     updateCategory({ id: "category-1", name: "エラー" }),
-  ).rejects.toThrow("カテゴリの更新に失敗しました。");
+  ).rejects.toThrow("DB Error");
 });

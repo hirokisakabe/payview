@@ -82,5 +82,5 @@ test("異常系: DB操作でエラーが発生した場合", async () => {
       categoryId: "category-1",
       pattern: "エラー",
     }),
-  ).rejects.toThrow("ルールの追加に失敗しました。");
+  ).rejects.toThrow("DB Error");
 });

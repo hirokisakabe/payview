@@ -5,12 +5,12 @@ import {
   AddPaymentsInvalidFileError,
   usePaymentsFiles,
   deletePaymentFile,
-} from "../data/payments";
+} from "../../data/payments";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { MonthlyTotalChart } from "./RootPage/components/MonthlyTotalChart";
-import { formatYen } from "../utils/formatYen";
+import { MonthlyTotalChart } from "./components/MonthlyTotalChart";
+import { formatYen } from "../../utils/formatYen";
 
 export function RootPage() {
   const files = usePaymentsFiles();

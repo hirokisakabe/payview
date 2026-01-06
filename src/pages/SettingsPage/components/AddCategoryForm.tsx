@@ -9,15 +9,14 @@ export function AddCategoryForm() {
     if (!name.trim()) return;
 
     setIsSubmitting(true);
-    const result = await addCategory({ name: name.trim() });
-    setIsSubmitting(false);
-
-    if (result.isErr()) {
-      alert(result.error.message);
-      return;
+    try {
+      await addCategory({ name: name.trim() });
+      setName("");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setName("");
   };
 
   return (

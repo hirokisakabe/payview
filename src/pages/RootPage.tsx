@@ -31,28 +31,28 @@ export function RootPage() {
       return;
     }
 
-    const addPaymentsResult = await addPayments(selectedFiles);
-
-    if (addPaymentsResult.isErr()) {
-      if (addPaymentsResult.error instanceof AddPaymentsInvalidFileError) {
-        alert(`ファイルの形式が不正です: ${addPaymentsResult.error.message}`);
+    try {
+      await addPayments(selectedFiles);
+      setSelectedFiles(undefined);
+      if (fileInputRef.current) {
+        (fileInputRef.current as HTMLInputElement).value = "";
+      }
+    } catch (err) {
+      if (err instanceof AddPaymentsInvalidFileError) {
+        alert(`ファイルの形式が不正です: ${err.message}`);
         return;
       }
 
-      if (addPaymentsResult.error instanceof AddPaymentsConstraintError) {
+      if (err instanceof AddPaymentsConstraintError) {
         alert(
           "ファイルは既に登録されています。別のファイルを選択してください。",
         );
         return;
       }
 
-      alert(`ファイルの登録に失敗しました: ${addPaymentsResult.error.message}`);
-      return;
-    }
-
-    setSelectedFiles(undefined);
-    if (fileInputRef.current) {
-      (fileInputRef.current as HTMLInputElement).value = "";
+      alert(
+        `ファイルの登録に失敗しました: ${err instanceof Error ? err.message : "不明なエラー"}`,
+      );
     }
   };
 

@@ -1,4 +1,3 @@
-import { ok, Result, ResultAsync } from "neverthrow";
 import { convertCsvDataToPaymentData } from "./convertCsvDataToPaymentData";
 import {
   createPayments,
@@ -8,52 +7,55 @@ import {
   convertFileToCsvData,
   ConvertFileToCsvInvalidCsvError,
 } from "./convertFileToCsvData";
-import { createErr } from "../../../utils/createErr";
+import type { Payment } from "./paymentSchema";
 
-export async function addPayments(files: File[]) {
-  const csvData = await ResultAsync.combine(
-    files.map((file) =>
-      convertFileToCsvData({ file }).map((csvDataItem) => ({
-        fileName: file.name,
-        ...csvDataItem,
-      })),
-    ),
-  );
-
-  if (csvData.isErr()) {
-    if (csvData.error instanceof ConvertFileToCsvInvalidCsvError) {
-      return createErr(
-        new AddPaymentsInvalidFileError("CSVデータを読み取れませんでした。", {
-          cause: csvData.error,
-        }),
+export async function addPayments(files: File[]): Promise<void> {
+  // Step 1: CSVファイルをパース
+  let csvDataList: { fileName: string; csvData: unknown[] }[];
+  try {
+    csvDataList = await Promise.all(
+      files.map(async (file) => {
+        const csvDataItem = await convertFileToCsvData({ file });
+        return {
+          fileName: file.name,
+          ...csvDataItem,
+        };
+      }),
+    );
+  } catch (err) {
+    console.error(err);
+    if (err instanceof ConvertFileToCsvInvalidCsvError) {
+      throw new AddPaymentsInvalidFileError(
+        "CSVデータを読み取れませんでした。",
+        {
+          cause: err,
+        },
       );
     }
-
-    return createErr(
-      new AddPaymentsUnknownError("不明なエラーが発生しました。", {
-        cause: csvData.error,
-      }),
-    );
+    throw new AddPaymentsUnknownError("不明なエラーが発生しました。", {
+      cause: err,
+    });
   }
 
-  const paymentData = Result.combine(
-    csvData.value.map((csvDataItem) =>
-      convertCsvDataToPaymentData(csvDataItem).map((paymentDataItem) => ({
+  // Step 2: CSVデータを支払いデータに変換
+  let paymentDataList: { fileName: string; payments: Payment[] }[];
+  try {
+    paymentDataList = csvDataList.map((csvDataItem) => {
+      const paymentDataItem = convertCsvDataToPaymentData(csvDataItem);
+      return {
         fileName: csvDataItem.fileName,
         ...paymentDataItem,
-      })),
-    ),
-  );
-
-  if (paymentData.isErr()) {
-    return createErr(
-      new AddPaymentsInvalidFileError("ファイルの形式が不正です。", {
-        cause: paymentData.error,
-      }),
-    );
+      };
+    });
+  } catch (err) {
+    console.error(err);
+    throw new AddPaymentsInvalidFileError("ファイルの形式が不正です。", {
+      cause: err,
+    });
   }
 
-  const sortedPaymentData = paymentData.value.map((item) => ({
+  // Step 3: ソートとフィルタリング
+  const sortedPaymentData = paymentDataList.map((item) => ({
     fileName: item.fileName,
     payments: item.payments.sort((a, b) => {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -67,26 +69,21 @@ export async function addPayments(files: File[]) {
     }),
   );
 
-  const createPaymentsResult = await createPayments(filteredPaymentData);
-
-  if (createPaymentsResult.isErr()) {
-    if (createPaymentsResult.error instanceof CreatePaymentsConstraintError) {
-      return createErr(
-        new AddPaymentsConstraintError(
-          "ファイルは既に登録されています。別のファイルを選択してください。",
-          { cause: createPaymentsResult.error },
-        ),
-      );
-    } else {
-      return createErr(
-        new AddPaymentsUnknownError("不明なエラーが発生しました。", {
-          cause: createPaymentsResult.error,
-        }),
+  // Step 4: DBに保存
+  try {
+    await createPayments(filteredPaymentData);
+  } catch (err) {
+    console.error(err);
+    if (err instanceof CreatePaymentsConstraintError) {
+      throw new AddPaymentsConstraintError(
+        "ファイルは既に登録されています。別のファイルを選択してください。",
+        { cause: err },
       );
     }
+    throw new AddPaymentsUnknownError("不明なエラーが発生しました。", {
+      cause: err,
+    });
   }
-
-  return ok(undefined);
 }
 
 export class AddPaymentsUnknownError extends Error {

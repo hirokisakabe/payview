@@ -1,39 +1,28 @@
-import { ResultAsync } from "neverthrow";
 import { db } from "../../db";
 import type { Payment } from "./paymentSchema";
 
 type Input = { fileName: string; payments: Payment[] }[];
-type Output = undefined;
-type Return = ResultAsync<
-  Output,
-  CreatePaymentsUnknownError | CreatePaymentsConstraintError
->;
 
-export function createPayments(items: Input): Return {
-  return ResultAsync.fromPromise(
-    (async () => {
-      await db.paymentFiles.bulkAdd(
-        items.map((item) => ({
-          fileName: item.fileName,
-          payments: item.payments,
-        })),
+export async function createPayments(items: Input): Promise<void> {
+  try {
+    await db.paymentFiles.bulkAdd(
+      items.map((item) => ({
+        fileName: item.fileName,
+        payments: item.payments,
+      })),
+    );
+  } catch (err) {
+    if (isDexieConstraintError(err)) {
+      throw new CreatePaymentsConstraintError(
+        `ファイルは既に登録されています。別のファイルを選択してください。`,
+        { cause: err },
       );
+    }
 
-      return undefined;
-    })(),
-    (err) => {
-      if (isDexieConstraintError(err)) {
-        return new CreatePaymentsConstraintError(
-          `ファイルは既に登録されています。別のファイルを選択してください。`,
-          { cause: err },
-        );
-      }
-
-      return new CreatePaymentsUnknownError("不明なエラーが発生しました。", {
-        cause: err,
-      });
-    },
-  );
+    throw new CreatePaymentsUnknownError("不明なエラーが発生しました。", {
+      cause: err,
+    });
+  }
 }
 
 function isDexieConstraintError(error: unknown): boolean {

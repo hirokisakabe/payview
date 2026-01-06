@@ -25,15 +25,15 @@ export function CategoryRuleItem({ rule }: Props) {
   const handleUpdate = async () => {
     if (!editPattern.trim()) return;
 
-    const result = await updateCategoryRule({
-      id: rule.id,
-      pattern: editPattern.trim(),
-    });
-    if (result.isErr()) {
-      alert(result.error.message);
-      return;
+    try {
+      await updateCategoryRule({
+        id: rule.id,
+        pattern: editPattern.trim(),
+      });
+      setIsEditing(false);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "エラーが発生しました");
     }
-    setIsEditing(false);
   };
 
   const handleDelete = async () => {
@@ -41,9 +41,10 @@ export function CategoryRuleItem({ rule }: Props) {
       return;
     }
 
-    const result = await deleteCategoryRule({ id: rule.id });
-    if (result.isErr()) {
-      alert(result.error.message);
+    try {
+      await deleteCategoryRule({ id: rule.id });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "エラーが発生しました");
     }
   };
 

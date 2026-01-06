@@ -19,22 +19,12 @@ export async function createPayments(items: Input): Promise<void> {
       );
     }
 
-    throw new CreatePaymentsUnknownError("不明なエラーが発生しました。", {
-      cause: err,
-    });
+    throw new Error("不明なエラーが発生しました。", { cause: err });
   }
 }
 
 function isDexieConstraintError(error: unknown): boolean {
   return error instanceof Error && error.name === "ConstraintError";
-}
-
-export class CreatePaymentsUnknownError extends Error {
-  override readonly name = "CreatePaymentsUnknownError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
-  }
 }
 
 export class CreatePaymentsConstraintError extends Error {

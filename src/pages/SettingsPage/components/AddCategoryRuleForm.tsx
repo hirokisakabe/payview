@@ -19,8 +19,8 @@ export function AddCategoryRuleForm({ categoryId }: Props) {
         pattern: pattern.trim(),
       });
       setPattern("");
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "エラーが発生しました");
+    } catch {
+      alert("ルールの追加に失敗しました。");
     } finally {
       setIsSubmitting(false);
     }

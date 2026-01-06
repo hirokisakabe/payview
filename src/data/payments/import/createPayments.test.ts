@@ -2,7 +2,6 @@ import { beforeEach, expect, test, vi } from "vitest";
 import {
   createPayments,
   CreatePaymentsConstraintError,
-  CreatePaymentsUnknownError,
 } from "./createPayments";
 
 vi.mock("../../db", () => ({
@@ -67,15 +66,6 @@ test("異常系: その他のエラーの場合、CreatePaymentsUnknownErrorをt
   vi.mocked(db.paymentFiles.bulkAdd).mockRejectedValue(
     new Error("Unknown error"),
   );
-
-  await expect(
-    createPayments([
-      {
-        fileName: "test.csv",
-        payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
-      },
-    ]),
-  ).rejects.toThrow(CreatePaymentsUnknownError);
 
   await expect(
     createPayments([

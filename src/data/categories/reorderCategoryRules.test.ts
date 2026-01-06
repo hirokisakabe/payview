@@ -1,8 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
-import {
-  reorderCategoryRules,
-  ReorderCategoryRulesError,
-} from "./reorderCategoryRules";
+import { reorderCategoryRules } from "./reorderCategoryRules";
 
 const { mockTransaction, mockCategoryRulesUpdate } = vi.hoisted(() => ({
   mockTransaction: vi.fn(),
@@ -47,9 +44,6 @@ test("異常系: トランザクションでエラーが発生した場合", asy
   mockTransaction.mockRejectedValue(new Error("Transaction Error"));
 
   await expect(reorderCategoryRules({ ruleIds: ["rule-1"] })).rejects.toThrow(
-    ReorderCategoryRulesError,
-  );
-  await expect(reorderCategoryRules({ ruleIds: ["rule-1"] })).rejects.toThrow(
-    "ルールの並び替えに失敗しました。",
+    "Transaction Error",
   );
 });

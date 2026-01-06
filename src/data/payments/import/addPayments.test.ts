@@ -3,22 +3,16 @@ import {
   addPayments,
   AddPaymentsConstraintError,
   AddPaymentsInvalidFileError,
-  AddPaymentsUnknownError,
 } from "./addPayments";
 import {
   convertFileToCsvData,
   ConvertFileToCsvInvalidCsvError,
-  ConvertFileToCsvUnknownError,
 } from "./convertFileToCsvData";
 import {
   createPayments,
   CreatePaymentsConstraintError,
-  CreatePaymentsUnknownError,
 } from "./createPayments";
-import {
-  convertCsvDataToPaymentData,
-  ConvertCsvDataToPaymentDataInvalidSchemaError,
-} from "./convertCsvDataToPaymentData";
+import { convertCsvDataToPaymentData } from "./convertCsvDataToPaymentData";
 
 vi.mock("./createPayments");
 vi.mock("./convertFileToCsvData");
@@ -62,12 +56,10 @@ test("正常系: データ登録", async () => {
 });
 
 test("異常系: ファイルのデータ変換でエラーになった場合", async () => {
-  vi.mocked(convertFileToCsvData).mockRejectedValue(
-    new ConvertFileToCsvUnknownError("dummy_message"),
-  );
+  vi.mocked(convertFileToCsvData).mockRejectedValue(new Error("dummy_message"));
 
   await expect(addPayments(dummyFiles)).rejects.toThrow(
-    AddPaymentsUnknownError,
+    "不明なエラーが発生しました。",
   );
 });
 
@@ -83,7 +75,7 @@ test("異常系: CSVデータとして読み込めなかった場合", async () 
 
 test("異常系: データのパースでエラーになった場合", async () => {
   vi.mocked(convertCsvDataToPaymentData).mockImplementation(() => {
-    throw new ConvertCsvDataToPaymentDataInvalidSchemaError("dummy_message");
+    throw new Error("dummy_message");
   });
 
   await expect(addPayments(dummyFiles)).rejects.toThrow(
@@ -102,11 +94,9 @@ test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)"
 });
 
 test("異常系: IndexedDBへの登録でエラーが発生した場合", async () => {
-  vi.mocked(createPayments).mockRejectedValue(
-    new CreatePaymentsUnknownError("dummy_message"),
-  );
+  vi.mocked(createPayments).mockRejectedValue(new Error("dummy_message"));
 
   await expect(addPayments(dummyFiles)).rejects.toThrow(
-    AddPaymentsUnknownError,
+    "不明なエラーが発生しました。",
   );
 });

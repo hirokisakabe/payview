@@ -11,7 +11,6 @@ export {
   addPayments,
   AddPaymentsConstraintError,
   AddPaymentsInvalidFileError,
-  AddPaymentsUnknownError,
 } from "./payments";
 
 // Re-export from categories
@@ -20,25 +19,14 @@ export {
   useCategoryRules,
   useAllCategoryRules,
   addCategory,
-  AddCategoryError,
   updateCategory,
-  UpdateCategoryError,
   deleteCategory,
-  DeleteCategoryError,
   addCategoryRule,
-  AddCategoryRuleError,
   updateCategoryRule,
-  UpdateCategoryRuleError,
   deleteCategoryRule,
-  DeleteCategoryRuleError,
   reorderCategories,
-  ReorderCategoriesError,
   reorderCategoryRules,
-  ReorderCategoryRulesError,
 } from "./categories";
 
 // Common types
 export type { QueryResult } from "./types";
-
-// Common errors
-export { DataError } from "./errors";

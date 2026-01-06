@@ -1,8 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
-import {
-  deleteCategoryRule,
-  DeleteCategoryRuleError,
-} from "./deleteCategoryRule";
+import { deleteCategoryRule } from "./deleteCategoryRule";
 
 vi.mock("../db", () => ({
   db: {
@@ -32,9 +29,6 @@ test("異常系: DB操作でエラーが発生した場合", async () => {
   );
 
   await expect(deleteCategoryRule({ id: "rule-1" })).rejects.toThrow(
-    DeleteCategoryRuleError,
-  );
-  await expect(deleteCategoryRule({ id: "rule-1" })).rejects.toThrow(
-    "ルールの削除に失敗しました。",
+    "DB Error",
   );
 });

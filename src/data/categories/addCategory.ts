@@ -16,16 +16,6 @@ export async function addCategory(input: Input): Promise<string> {
 
     return id;
   } catch (err) {
-    throw new AddCategoryError("カテゴリの追加に失敗しました。", {
-      cause: err,
-    });
-  }
-}
-
-export class AddCategoryError extends Error {
-  override readonly name = "AddCategoryError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
+    throw new Error("カテゴリの追加に失敗しました。", { cause: err });
   }
 }

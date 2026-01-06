@@ -2,7 +2,6 @@ import { beforeEach, expect, test, vi } from "vitest";
 import {
   convertFileToCsvData,
   ConvertFileToCsvInvalidCsvError,
-  ConvertFileToCsvUnknownError,
 } from "./convertFileToCsvData";
 
 vi.mock("csv-parse/browser/esm/sync", () => ({
@@ -90,7 +89,7 @@ test("異常系: パース中にエラーが発生した場合、ConvertFileToCs
   const file = createMockFile("invalid", "test.csv");
 
   await expect(convertFileToCsvData({ file })).rejects.toThrow(
-    ConvertFileToCsvUnknownError,
+    "不明なエラーが発生しました。",
   );
 });
 

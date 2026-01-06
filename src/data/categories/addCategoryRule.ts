@@ -20,16 +20,6 @@ export async function addCategoryRule(input: Input): Promise<string> {
 
     return id;
   } catch (err) {
-    throw new AddCategoryRuleError("ルールの追加に失敗しました。", {
-      cause: err,
-    });
-  }
-}
-
-export class AddCategoryRuleError extends Error {
-  override readonly name = "AddCategoryRuleError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
+    throw new Error("ルールの追加に失敗しました。", { cause: err });
   }
 }

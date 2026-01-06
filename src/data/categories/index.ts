@@ -1,20 +1,11 @@
 export { useCategories } from "./useCategories";
 export { useCategoryRules } from "./useCategoryRules";
 export { useAllCategoryRules } from "./useAllCategoryRules";
-export { addCategory, AddCategoryError } from "./addCategory";
-export { updateCategory, UpdateCategoryError } from "./updateCategory";
-export { deleteCategory, DeleteCategoryError } from "./deleteCategory";
-export { addCategoryRule, AddCategoryRuleError } from "./addCategoryRule";
-export {
-  updateCategoryRule,
-  UpdateCategoryRuleError,
-} from "./updateCategoryRule";
-export {
-  deleteCategoryRule,
-  DeleteCategoryRuleError,
-} from "./deleteCategoryRule";
-export { reorderCategories, ReorderCategoriesError } from "./reorderCategories";
-export {
-  reorderCategoryRules,
-  ReorderCategoryRulesError,
-} from "./reorderCategoryRules";
+export { addCategory } from "./addCategory";
+export { updateCategory } from "./updateCategory";
+export { deleteCategory } from "./deleteCategory";
+export { addCategoryRule } from "./addCategoryRule";
+export { updateCategoryRule } from "./updateCategoryRule";
+export { deleteCategoryRule } from "./deleteCategoryRule";
+export { reorderCategories } from "./reorderCategories";
+export { reorderCategoryRules } from "./reorderCategoryRules";

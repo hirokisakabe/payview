@@ -1,8 +1,5 @@
 import { expect, test } from "vitest";
-import {
-  convertCsvDataToPaymentData,
-  ConvertCsvDataToPaymentDataInvalidSchemaError,
-} from "./convertCsvDataToPaymentData";
+import { convertCsvDataToPaymentData } from "./convertCsvDataToPaymentData";
 
 test("正常系: 有効なCSVデータがPayment[]に変換される", () => {
   const csvData = [
@@ -46,7 +43,7 @@ test("異常系: 必須フィールドがない場合、InvalidSchemaErrorをthr
   ];
 
   expect(() => convertCsvDataToPaymentData({ csvData })).toThrow(
-    ConvertCsvDataToPaymentDataInvalidSchemaError,
+    "ファイルの形式が不正です。",
   );
 });
 

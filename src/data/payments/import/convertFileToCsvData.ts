@@ -84,9 +84,7 @@ export async function convertFileToCsvData(input: Input): Promise<Output> {
 
     csvData = normalizeToCommonFormat(rawCsvData, columns);
   } catch (error) {
-    throw new ConvertFileToCsvUnknownError("不明なエラーが発生しました。", {
-      cause: error,
-    });
+    throw new Error("不明なエラーが発生しました。", { cause: error });
   }
 
   if (csvData.length === 0) {
@@ -96,14 +94,6 @@ export async function convertFileToCsvData(input: Input): Promise<Output> {
   }
 
   return { csvData };
-}
-
-export class ConvertFileToCsvUnknownError extends Error {
-  override readonly name = "ConvertFileToCsvUnknownError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
-  }
 }
 
 export class ConvertFileToCsvInvalidCsvError extends Error {

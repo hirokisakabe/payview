@@ -1,5 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
-import { reorderCategories, ReorderCategoriesError } from "./reorderCategories";
+import { reorderCategories } from "./reorderCategories";
 
 const { mockTransaction, mockCategoriesUpdate } = vi.hoisted(() => ({
   mockTransaction: vi.fn(),
@@ -43,9 +43,6 @@ test("正常系: 空の配列でも正常に処理される", async () => {
 test("異常系: トランザクションでエラーが発生した場合", async () => {
   mockTransaction.mockRejectedValue(new Error("Transaction Error"));
 
-  await expect(
-    reorderCategories({ categoryIds: ["category-1"] }),
-  ).rejects.toThrow(ReorderCategoriesError);
   await expect(
     reorderCategories({ categoryIds: ["category-1"] }),
   ).rejects.toThrow("カテゴリの並び替えに失敗しました。");

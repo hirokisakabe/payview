@@ -6,5 +6,4 @@ export {
   addPayments,
   AddPaymentsConstraintError,
   AddPaymentsInvalidFileError,
-  AddPaymentsUnknownError,
 } from "./import/addPayments";

@@ -10,18 +10,6 @@ export function convertCsvDataToPaymentData(input: Input): Output {
       payments: z.array(paymentSchema).parse(input.csvData),
     };
   } catch (err) {
-    throw new ConvertCsvDataToPaymentDataInvalidSchemaError(
-      "ファイルの形式が不正です。",
-      { cause: err },
-    );
-  }
-}
-
-export class ConvertCsvDataToPaymentDataInvalidSchemaError extends Error {
-  override readonly name =
-    "ConvertCsvDataToPaymentDataInvalidSchemaError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
+    throw new Error("ファイルの形式が不正です。", { cause: err });
   }
 }

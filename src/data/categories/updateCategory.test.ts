@@ -1,5 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
-import { updateCategory, UpdateCategoryError } from "./updateCategory";
+import { updateCategory } from "./updateCategory";
 
 vi.mock("../db", () => ({
   db: {
@@ -30,9 +30,6 @@ test("異常系: DB操作でエラーが発生した場合", async () => {
     new Error("DB Error") as never,
   );
 
-  await expect(
-    updateCategory({ id: "category-1", name: "エラー" }),
-  ).rejects.toThrow(UpdateCategoryError);
   await expect(
     updateCategory({ id: "category-1", name: "エラー" }),
   ).rejects.toThrow("カテゴリの更新に失敗しました。");

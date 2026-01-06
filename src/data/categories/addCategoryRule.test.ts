@@ -1,5 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
-import { addCategoryRule, AddCategoryRuleError } from "./addCategoryRule";
+import { addCategoryRule } from "./addCategoryRule";
 
 vi.mock("../db", () => ({
   db: {
@@ -77,12 +77,6 @@ test("異常系: DB操作でエラーが発生した場合", async () => {
     }),
   } as never);
 
-  await expect(
-    addCategoryRule({
-      categoryId: "category-1",
-      pattern: "エラー",
-    }),
-  ).rejects.toThrow(AddCategoryRuleError);
   await expect(
     addCategoryRule({
       categoryId: "category-1",

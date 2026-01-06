@@ -32,9 +32,7 @@ export async function addPayments(files: File[]): Promise<void> {
         },
       );
     }
-    throw new AddPaymentsUnknownError("不明なエラーが発生しました。", {
-      cause: err,
-    });
+    throw new Error("不明なエラーが発生しました。", { cause: err });
   }
 
   // Step 2: CSVデータを支払いデータに変換
@@ -80,17 +78,7 @@ export async function addPayments(files: File[]): Promise<void> {
         { cause: err },
       );
     }
-    throw new AddPaymentsUnknownError("不明なエラーが発生しました。", {
-      cause: err,
-    });
-  }
-}
-
-export class AddPaymentsUnknownError extends Error {
-  override readonly name = "AddPaymentsUnknownError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
+    throw new Error("不明なエラーが発生しました。", { cause: err });
   }
 }
 

@@ -10,16 +10,6 @@ export async function reorderCategoryRules(input: Input): Promise<void> {
       }
     });
   } catch (err) {
-    throw new ReorderCategoryRulesError("ルールの並び替えに失敗しました。", {
-      cause: err,
-    });
-  }
-}
-
-export class ReorderCategoryRulesError extends Error {
-  override readonly name = "ReorderCategoryRulesError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
-    super(message, options);
-    this.cause = options?.cause;
+    throw new Error("ルールの並び替えに失敗しました。", { cause: err });
   }
 }

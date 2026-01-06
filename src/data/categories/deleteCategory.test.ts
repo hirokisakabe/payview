@@ -1,5 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
-import { deleteCategory, DeleteCategoryError } from "./deleteCategory";
+import { deleteCategory } from "./deleteCategory";
 
 const { mockTransaction, mockCategoryRulesWhere, mockCategoriesDelete } =
   vi.hoisted(() => ({
@@ -43,9 +43,6 @@ test("正常系: カテゴリと関連ルールが削除される", async () => 
 test("異常系: トランザクションでエラーが発生した場合", async () => {
   mockTransaction.mockRejectedValue(new Error("Transaction Error"));
 
-  await expect(deleteCategory({ id: "category-1" })).rejects.toThrow(
-    DeleteCategoryError,
-  );
   await expect(deleteCategory({ id: "category-1" })).rejects.toThrow(
     "カテゴリの削除に失敗しました。",
   );

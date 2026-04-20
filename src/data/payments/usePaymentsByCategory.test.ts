@@ -361,12 +361,71 @@ test("正常系: スペースを含むパターンで支払い名にマッチす
   }
 });
 
+test("正常系: 未分類は金額に関わらず常にbreakdownの最終行に表示される", () => {
+  vi.mocked(usePayments).mockReturnValue({
+    status: "completed",
+    payments: [
+      { date: "2023-01-01", name: "スーパー", price: 500, count: 1 },
+      { date: "2023-01-02", name: "電車", price: 300, count: 1 },
+      { date: "2023-01-03", name: "謎の支払い", price: 10000, count: 1 },
+    ],
+  });
+  vi.mocked(useAllCategoryRules).mockReturnValue({
+    status: "completed",
+    categoriesWithRules: [
+      {
+        id: "category-1",
+        name: "食費",
+        order: 0,
+        rules: [
+          {
+            id: "rule-1",
+            categoryId: "category-1",
+            pattern: "スーパー",
+            order: 0,
+          },
+        ],
+      },
+      {
+        id: "category-2",
+        name: "交通費",
+        order: 1,
+        rules: [
+          { id: "rule-2", categoryId: "category-2", pattern: "電車", order: 0 },
+        ],
+      },
+    ],
+  });
+
+  const { result } = renderHook(() =>
+    usePaymentsByCategory({ fileName: "test.csv" }),
+  );
+
+  expect(result.current.status).toBe("completed");
+  if (result.current.status === "completed") {
+    expect(result.current.breakdown).toHaveLength(3);
+    // 分類済みカテゴリは金額降順
+    expect(result.current.breakdown[0].category?.name).toBe("食費");
+    expect(result.current.breakdown[0].total).toBe(500);
+    expect(result.current.breakdown[1].category?.name).toBe("交通費");
+    expect(result.current.breakdown[1].total).toBe(300);
+    // 未分類は金額が最大でも最終行
+    expect(result.current.breakdown[2].category).toBeNull();
+    expect(result.current.breakdown[2].total).toBe(10000);
+  }
+});
+
 test("正常系: 全角スペースと半角スペースが正規化されてマッチする", () => {
   vi.mocked(usePayments).mockReturnValue({
     status: "completed",
     payments: [
       // 半角スペース×2
-      { date: "2023-01-01", name: "ＡＢＣＤ  ＳＨＯＰ", price: 3000, count: 1 },
+      {
+        date: "2023-01-01",
+        name: "ＡＢＣＤ  ＳＨＯＰ",
+        price: 3000,
+        count: 1,
+      },
     ],
   });
   vi.mocked(useAllCategoryRules).mockReturnValue({

@@ -127,6 +127,8 @@ export function usePaymentsByCategory({
 
     const allBreakdown: CategoryBreakdownItem[] = [...categorizedBreakdown];
 
+    allBreakdown.sort((a, b) => b.total - a.total);
+
     if (uncategorizedTotals.size > 0) {
       const subBreakdown: SubBreakdownItem[] = Array.from(
         uncategorizedTotals.entries(),
@@ -146,8 +148,6 @@ export function usePaymentsByCategory({
         subBreakdown,
       });
     }
-
-    allBreakdown.sort((a, b) => b.total - a.total);
 
     return {
       status: "completed" as const,

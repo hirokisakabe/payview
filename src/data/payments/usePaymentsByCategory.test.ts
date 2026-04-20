@@ -361,6 +361,86 @@ test("正常系: スペースを含むパターンで支払い名にマッチす
   }
 });
 
+test("正常系: 全角スペースと半角スペースが正規化されてマッチする", () => {
+  vi.mocked(usePayments).mockReturnValue({
+    status: "completed",
+    payments: [
+      // 半角スペース×2
+      { date: "2023-01-01", name: "ＡＢＣＤ  ＳＨＯＰ", price: 3000, count: 1 },
+    ],
+  });
+  vi.mocked(useAllCategoryRules).mockReturnValue({
+    status: "completed",
+    categoriesWithRules: [
+      {
+        id: "category-1",
+        name: "ショッピング",
+        order: 0,
+        rules: [
+          {
+            id: "rule-1",
+            categoryId: "category-1",
+            // 全角スペース×1
+            pattern: "ＡＢＣＤ\u3000ＳＨＯＰ",
+            order: 0,
+          },
+        ],
+      },
+    ],
+  });
+
+  const { result } = renderHook(() =>
+    usePaymentsByCategory({ fileName: "test.csv" }),
+  );
+
+  expect(result.current.status).toBe("completed");
+  if (result.current.status === "completed") {
+    expect(result.current.breakdown).toHaveLength(1);
+    expect(result.current.breakdown[0].category?.name).toBe("ショッピング");
+    expect(result.current.breakdown[0].total).toBe(3000);
+  }
+});
+
+test("正常系: 連続する半角スペースが正規化されてマッチする", () => {
+  vi.mocked(usePayments).mockReturnValue({
+    status: "completed",
+    payments: [
+      // 半角スペース×3
+      { date: "2023-01-01", name: "SHOP   NAME", price: 2000, count: 1 },
+    ],
+  });
+  vi.mocked(useAllCategoryRules).mockReturnValue({
+    status: "completed",
+    categoriesWithRules: [
+      {
+        id: "category-1",
+        name: "ショッピング",
+        order: 0,
+        rules: [
+          {
+            id: "rule-1",
+            categoryId: "category-1",
+            // 半角スペース×1
+            pattern: "SHOP NAME",
+            order: 0,
+          },
+        ],
+      },
+    ],
+  });
+
+  const { result } = renderHook(() =>
+    usePaymentsByCategory({ fileName: "test.csv" }),
+  );
+
+  expect(result.current.status).toBe("completed");
+  if (result.current.status === "completed") {
+    expect(result.current.breakdown).toHaveLength(1);
+    expect(result.current.breakdown[0].category?.name).toBe("ショッピング");
+    expect(result.current.breakdown[0].total).toBe(2000);
+  }
+});
+
 test("正常系: 支払いがない場合、空のbreakdownを返す", () => {
   vi.mocked(usePayments).mockReturnValue({
     status: "completed",

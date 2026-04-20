@@ -37,6 +37,10 @@ type UsePaymentsByCategoryResult =
   | { status: "loading" }
   | { status: "completed"; breakdown: CategoryBreakdownItem[] };
 
+function normalizeSpaces(s: string): string {
+  return s.replace(/[\u3000]/g, " ").replace(/\s+/g, " ");
+}
+
 export function usePaymentsByCategory({
   fileName,
 }: Props): UsePaymentsByCategoryResult {
@@ -56,7 +60,9 @@ export function usePaymentsByCategory({
     const findCategoryForPayment = (paymentName: string): CategoryInfo => {
       for (const category of categoriesWithRules) {
         for (const rule of category.rules) {
-          if (paymentName.includes(rule.pattern)) {
+          if (
+            normalizeSpaces(paymentName).includes(normalizeSpaces(rule.pattern))
+          ) {
             return { id: category.id, name: category.name };
           }
         }

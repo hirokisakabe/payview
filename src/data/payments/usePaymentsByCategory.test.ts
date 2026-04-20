@@ -355,8 +355,9 @@ test("正常系: スペースを含むパターンで支払い名にマッチす
     expect(categorized?.category?.name).toBe("ショッピング");
     expect(categorized?.total).toBe(3000);
     expect(categorized?.count).toBe(1);
-    expect(uncategorized?.name).toBe("AMAZONPRIME");
     expect(uncategorized?.total).toBe(500);
+    expect(uncategorized?.subBreakdown).toHaveLength(1);
+    expect(uncategorized?.subBreakdown![0].name).toBe("AMAZONPRIME");
   }
 });
 

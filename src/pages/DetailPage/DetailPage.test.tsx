@@ -121,8 +121,8 @@ describe("DetailPage", () => {
       });
 
       await waitFor(() => {
-        // Payment name shown as uncategorized item
-        expect(screen.getByText("スーパーA")).toBeInTheDocument();
+        // Uncategorized payments are grouped under "未分類"
+        expect(screen.getByText("未分類")).toBeInTheDocument();
       });
     });
   });

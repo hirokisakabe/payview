@@ -27,7 +27,7 @@ export function PaymentCategoryView({ fileName }: Props) {
   const { breakdown } = result;
 
   const chartData = breakdown.slice(0, 20).map((item) => ({
-    name: item.category?.name || item.name || "",
+    name: item.category?.name || "未分類",
     value: item.total,
   }));
 
@@ -95,7 +95,7 @@ export function PaymentCategoryView({ fileName }: Props) {
                 <tbody>
                   {breakdown.map((item, index) => (
                     <CategoryBreakdownRow
-                      key={item.category?.id || `uncategorized-${index}`}
+                      key={item.category?.id || "uncategorized"}
                       item={item}
                       index={index}
                     />

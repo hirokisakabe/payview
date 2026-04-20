@@ -17,12 +17,20 @@ type PaymentDetail = {
   price: number;
 };
 
+type SubBreakdownItem = {
+  name: string;
+  total: number;
+  count: number;
+  payments: PaymentDetail[];
+};
+
 type CategoryBreakdownItem = {
   category: CategoryInfo;
   total: number;
   count: number;
   name?: string;
   payments: PaymentDetail[];
+  subBreakdown?: SubBreakdownItem[];
 };
 
 type UsePaymentsByCategoryResult =
@@ -110,17 +118,29 @@ export function usePaymentsByCategory({
     }
 
     const categorizedBreakdown = Array.from(categoryTotals.values());
-    const uncategorizedBreakdown: CategoryBreakdownItem[] = Array.from(
-      uncategorizedTotals.entries(),
-    ).map(([name, { total, count, payments }]) => ({
-      category: null,
-      total,
-      count,
-      name,
-      payments,
-    }));
 
-    const allBreakdown = [...categorizedBreakdown, ...uncategorizedBreakdown];
+    const allBreakdown: CategoryBreakdownItem[] = [...categorizedBreakdown];
+
+    if (uncategorizedTotals.size > 0) {
+      const subBreakdown: SubBreakdownItem[] = Array.from(
+        uncategorizedTotals.entries(),
+      ).map(([name, { total, count, payments }]) => ({
+        name,
+        total,
+        count,
+        payments,
+      }));
+      subBreakdown.sort((a, b) => b.total - a.total);
+
+      allBreakdown.push({
+        category: null,
+        total: subBreakdown.reduce((sum, item) => sum + item.total, 0),
+        count: subBreakdown.reduce((sum, item) => sum + item.count, 0),
+        payments: subBreakdown.flatMap((item) => item.payments),
+        subBreakdown,
+      });
+    }
+
     allBreakdown.sort((a, b) => b.total - a.total);
 
     return {

@@ -28,7 +28,7 @@ export function CategoryRuleItem({ rule }: Props) {
     try {
       await updateCategoryRule({
         id: rule.id,
-        pattern: editPattern.trim(),
+        pattern: editPattern,
       });
       setIsEditing(false);
     } catch {

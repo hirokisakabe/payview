@@ -311,6 +311,55 @@ test("正常系: カテゴリはあるがルールがない場合、全て未分
   }
 });
 
+test("正常系: スペースを含むパターンで支払い名にマッチする", () => {
+  vi.mocked(usePayments).mockReturnValue({
+    status: "completed",
+    payments: [
+      { date: "2023-01-01", name: "AMAZON CO JP", price: 3000, count: 1 },
+      { date: "2023-01-02", name: "AMAZONPRIME", price: 500, count: 1 },
+    ],
+  });
+  vi.mocked(useAllCategoryRules).mockReturnValue({
+    status: "completed",
+    categoriesWithRules: [
+      {
+        id: "category-1",
+        name: "ショッピング",
+        order: 0,
+        rules: [
+          {
+            id: "rule-1",
+            categoryId: "category-1",
+            pattern: "AMAZON CO",
+            order: 0,
+          },
+        ],
+      },
+    ],
+  });
+
+  const { result } = renderHook(() =>
+    usePaymentsByCategory({ fileName: "test.csv" }),
+  );
+
+  expect(result.current.status).toBe("completed");
+  if (result.current.status === "completed") {
+    // "AMAZON CO" (スペース含む) は "AMAZON CO JP" にマッチするが "AMAZONPRIME" にはマッチしない
+    expect(result.current.breakdown).toHaveLength(2);
+    const categorized = result.current.breakdown.find(
+      (b) => b.category !== null,
+    );
+    const uncategorized = result.current.breakdown.find(
+      (b) => b.category === null,
+    );
+    expect(categorized?.category?.name).toBe("ショッピング");
+    expect(categorized?.total).toBe(3000);
+    expect(categorized?.count).toBe(1);
+    expect(uncategorized?.name).toBe("AMAZONPRIME");
+    expect(uncategorized?.total).toBe(500);
+  }
+});
+
 test("正常系: 支払いがない場合、空のbreakdownを返す", () => {
   vi.mocked(usePayments).mockReturnValue({
     status: "completed",

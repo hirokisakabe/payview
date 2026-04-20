@@ -131,11 +131,12 @@ test("正常系: 複数ルールがある場合、最初にマッチしたカテ
   }
 });
 
-test("正常系: どのパターンにもマッチしない場合、未分類として集計される", () => {
+test("正常系: どのパターンにもマッチしない場合、未分類として1つにまとめて集計される", () => {
   vi.mocked(usePayments).mockReturnValue({
     status: "completed",
     payments: [
       { date: "2023-01-01", name: "謎の支払い", price: 1000, count: 1 },
+      { date: "2023-01-02", name: "不明な支払い", price: 2000, count: 1 },
     ],
   });
   vi.mocked(useAllCategoryRules).mockReturnValue({
@@ -165,12 +166,21 @@ test("正常系: どのパターンにもマッチしない場合、未分類と
   if (result.current.status === "completed") {
     expect(result.current.breakdown).toHaveLength(1);
     expect(result.current.breakdown[0].category).toBeNull();
-    expect(result.current.breakdown[0].name).toBe("謎の支払い");
-    expect(result.current.breakdown[0].payments).toHaveLength(1);
-    expect(result.current.breakdown[0].payments[0]).toEqual({
+    expect(result.current.breakdown[0].total).toBe(3000);
+    expect(result.current.breakdown[0].count).toBe(2);
+    expect(result.current.breakdown[0].payments).toHaveLength(2);
+    expect(result.current.breakdown[0].subBreakdown).toHaveLength(2);
+    expect(result.current.breakdown[0].subBreakdown![0]).toEqual({
+      name: "不明な支払い",
+      total: 2000,
+      count: 1,
+      payments: [{ name: "不明な支払い", date: "2023-01-02", price: 2000 }],
+    });
+    expect(result.current.breakdown[0].subBreakdown![1]).toEqual({
       name: "謎の支払い",
-      date: "2023-01-01",
-      price: 1000,
+      total: 1000,
+      count: 1,
+      payments: [{ name: "謎の支払い", date: "2023-01-01", price: 1000 }],
     });
   }
 });
@@ -270,7 +280,7 @@ test("正常系: breakdownはtotalの降順でソートされる", () => {
   }
 });
 
-test("正常系: カテゴリはあるがルールがない場合、全て未分類になる", () => {
+test("正常系: カテゴリはあるがルールがない場合、全て未分類にまとめられる", () => {
   vi.mocked(usePayments).mockReturnValue({
     status: "completed",
     payments: [{ date: "2023-01-01", name: "スーパー", price: 1000, count: 1 }],
@@ -295,6 +305,9 @@ test("正常系: カテゴリはあるがルールがない場合、全て未分
   if (result.current.status === "completed") {
     expect(result.current.breakdown).toHaveLength(1);
     expect(result.current.breakdown[0].category).toBeNull();
+    expect(result.current.breakdown[0].total).toBe(1000);
+    expect(result.current.breakdown[0].subBreakdown).toHaveLength(1);
+    expect(result.current.breakdown[0].subBreakdown![0].name).toBe("スーパー");
   }
 });
 
@@ -342,8 +355,9 @@ test("正常系: スペースを含むパターンで支払い名にマッチす
     expect(categorized?.category?.name).toBe("ショッピング");
     expect(categorized?.total).toBe(3000);
     expect(categorized?.count).toBe(1);
-    expect(uncategorized?.name).toBe("AMAZONPRIME");
     expect(uncategorized?.total).toBe(500);
+    expect(uncategorized?.subBreakdown).toHaveLength(1);
+    expect(uncategorized?.subBreakdown![0].name).toBe("AMAZONPRIME");
   }
 });
 

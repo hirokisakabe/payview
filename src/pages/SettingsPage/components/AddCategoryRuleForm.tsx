@@ -16,7 +16,7 @@ export function AddCategoryRuleForm({ categoryId }: Props) {
     try {
       await addCategoryRule({
         categoryId,
-        pattern: pattern.trim(),
+        pattern,
       });
       setPattern("");
     } catch {

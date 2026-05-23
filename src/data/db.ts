@@ -16,6 +16,7 @@ interface Category {
   id: string;
   name: string;
   order: number;
+  annualBudget?: number;
 }
 
 interface CategoryRule {

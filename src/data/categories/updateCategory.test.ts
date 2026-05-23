@@ -4,7 +4,8 @@ import { updateCategory } from "./updateCategory";
 vi.mock("../db", () => ({
   db: {
     categories: {
-      update: vi.fn(),
+      get: vi.fn(),
+      put: vi.fn(),
     },
   },
 }));
@@ -16,17 +17,95 @@ beforeEach(() => {
 });
 
 test("正常系: カテゴリ名が更新される", async () => {
-  vi.mocked(db.categories.update).mockResolvedValue(1 as never);
+  vi.mocked(db.categories.get).mockResolvedValue({
+    id: "category-1",
+    name: "旧名前",
+    order: 0,
+  } as never);
+  vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
 
   await updateCategory({ id: "category-1", name: "新しい名前" });
 
-  expect(db.categories.update).toHaveBeenCalledWith("category-1", {
+  expect(db.categories.put).toHaveBeenCalledWith({
+    id: "category-1",
     name: "新しい名前",
+    order: 0,
   });
 });
 
+test("正常系: 年予算が設定される", async () => {
+  vi.mocked(db.categories.get).mockResolvedValue({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+  } as never);
+  vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
+
+  await updateCategory({
+    id: "category-1",
+    name: "食費",
+    annualBudget: 120000,
+  });
+
+  expect(db.categories.put).toHaveBeenCalledWith({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    annualBudget: 120000,
+  });
+});
+
+test("正常系: 年予算が削除される（undefinedを渡す）", async () => {
+  vi.mocked(db.categories.get).mockResolvedValue({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    annualBudget: 120000,
+  } as never);
+  vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
+
+  await updateCategory({ id: "category-1", name: "食費" });
+
+  expect(db.categories.put).toHaveBeenCalledWith({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+  });
+});
+
+test("正常系: 既存の年予算が別の値に更新される", async () => {
+  vi.mocked(db.categories.get).mockResolvedValue({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    annualBudget: 60000,
+  } as never);
+  vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
+
+  await updateCategory({
+    id: "category-1",
+    name: "食費",
+    annualBudget: 120000,
+  });
+
+  expect(db.categories.put).toHaveBeenCalledWith({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    annualBudget: 120000,
+  });
+});
+
+test("正常系: カテゴリが存在しない場合は何もしない", async () => {
+  vi.mocked(db.categories.get).mockResolvedValue(undefined as never);
+
+  await updateCategory({ id: "not-exist", name: "名前" });
+
+  expect(db.categories.put).not.toHaveBeenCalled();
+});
+
 test("異常系: DB操作でエラーが発生した場合", async () => {
-  vi.mocked(db.categories.update).mockRejectedValue(
+  vi.mocked(db.categories.get).mockRejectedValue(
     new Error("DB Error") as never,
   );
 

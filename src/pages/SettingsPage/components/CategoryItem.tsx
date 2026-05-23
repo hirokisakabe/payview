@@ -21,6 +21,9 @@ export function CategoryItem({ category }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(category.name);
+  const [editAnnualBudget, setEditAnnualBudget] = useState(
+    category.annualBudget !== undefined ? String(category.annualBudget) : "",
+  );
   const rulesResult = useCategoryRules({ categoryId: category.id });
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -34,10 +37,25 @@ export function CategoryItem({ category }: Props) {
   const handleUpdate = async () => {
     if (!editName.trim()) return;
 
+    const parsedBudget = editAnnualBudget.trim()
+      ? Number(editAnnualBudget.trim())
+      : undefined;
+
+    if (
+      parsedBudget !== undefined &&
+      (!Number.isFinite(parsedBudget) ||
+        !Number.isInteger(parsedBudget) ||
+        parsedBudget < 0)
+    ) {
+      alert("年予算には0以上の整数を入力してください。");
+      return;
+    }
+
     try {
       await updateCategory({
         id: category.id,
         name: editName.trim(),
+        annualBudget: parsedBudget,
       });
       setIsEditing(false);
     } catch {
@@ -90,42 +108,81 @@ export function CategoryItem({ category }: Props) {
         </button>
 
         {isEditing ? (
-          <div className="flex flex-1 items-center gap-2">
-            <input
-              type="text"
-              className="input input-bordered input-sm flex-1"
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") void handleUpdate();
-                if (e.key === "Escape") {
-                  setIsEditing(false);
-                  setEditName(category.name);
-                }
-              }}
-              autoFocus
-            />
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={() => void handleUpdate()}
-            >
-              保存
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => {
+          <form
+            className="flex flex-1 flex-col gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleUpdate();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
                 setIsEditing(false);
                 setEditName(category.name);
-              }}
-            >
-              キャンセル
-            </button>
-          </div>
+                setEditAnnualBudget(
+                  category.annualBudget !== undefined
+                    ? String(category.annualBudget)
+                    : "",
+                );
+              }
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                className="input input-bordered input-sm flex-1"
+                value={editName}
+                placeholder="カテゴリ名"
+                onChange={(e) => setEditName(e.target.value)}
+                autoFocus
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-base-content/70 text-sm whitespace-nowrap">
+                年予算
+              </label>
+              <input
+                type="number"
+                className="input input-bordered input-sm w-40"
+                value={editAnnualBudget}
+                placeholder="未設定"
+                min={0}
+                step={1}
+                onChange={(e) => setEditAnnualBudget(e.target.value)}
+              />
+              <span className="text-base-content/70 text-sm">円</span>
+              <span className="text-base-content/50 text-xs">
+                （空欄で未設定）
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <button type="submit" className="btn btn-primary btn-sm">
+                保存
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditName(category.name);
+                  setEditAnnualBudget(
+                    category.annualBudget !== undefined
+                      ? String(category.annualBudget)
+                      : "",
+                  );
+                }}
+              >
+                キャンセル
+              </button>
+            </div>
+          </form>
         ) : (
           <>
             <span className="flex-1 font-medium">{category.name}</span>
+            {category.annualBudget !== undefined && (
+              <span className="text-base-content/60 text-sm">
+                年予算 {category.annualBudget.toLocaleString()}円
+              </span>
+            )}
             <span className="text-base-content/60 text-sm">
               {rulesResult.status === "completed"
                 ? `${rulesResult.rules.length} ルール`

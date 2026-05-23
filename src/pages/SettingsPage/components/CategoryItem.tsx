@@ -43,7 +43,9 @@ export function CategoryItem({ category }: Props) {
 
     if (
       parsedBudget !== undefined &&
-      (isNaN(parsedBudget) || parsedBudget < 0)
+      (!Number.isFinite(parsedBudget) ||
+        !Number.isInteger(parsedBudget) ||
+        parsedBudget < 0)
     ) {
       alert("年予算には0以上の整数を入力してください。");
       return;
@@ -106,7 +108,24 @@ export function CategoryItem({ category }: Props) {
         </button>
 
         {isEditing ? (
-          <div className="flex flex-1 flex-col gap-2">
+          <form
+            className="flex flex-1 flex-col gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleUpdate();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setIsEditing(false);
+                setEditName(category.name);
+                setEditAnnualBudget(
+                  category.annualBudget !== undefined
+                    ? String(category.annualBudget)
+                    : "",
+                );
+              }
+            }}
+          >
             <div className="flex items-center gap-2">
               <input
                 type="text"
@@ -114,17 +133,6 @@ export function CategoryItem({ category }: Props) {
                 value={editName}
                 placeholder="カテゴリ名"
                 onChange={(e) => setEditName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") {
-                    setIsEditing(false);
-                    setEditName(category.name);
-                    setEditAnnualBudget(
-                      category.annualBudget !== undefined
-                        ? String(category.annualBudget)
-                        : "",
-                    );
-                  }
-                }}
                 autoFocus
               />
             </div>
@@ -138,6 +146,7 @@ export function CategoryItem({ category }: Props) {
                 value={editAnnualBudget}
                 placeholder="未設定"
                 min={0}
+                step={1}
                 onChange={(e) => setEditAnnualBudget(e.target.value)}
               />
               <span className="text-base-content/70 text-sm">円</span>
@@ -146,11 +155,7 @@ export function CategoryItem({ category }: Props) {
               </span>
             </div>
             <div className="flex gap-2">
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-                onClick={() => void handleUpdate()}
-              >
+              <button type="submit" className="btn btn-primary btn-sm">
                 保存
               </button>
               <button
@@ -169,7 +174,7 @@ export function CategoryItem({ category }: Props) {
                 キャンセル
               </button>
             </div>
-          </div>
+          </form>
         ) : (
           <>
             <span className="flex-1 font-medium">{category.name}</span>

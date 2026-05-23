@@ -108,21 +108,19 @@ export function RootPage() {
       </div>
 
       {files && files.length > 0 && (
-        <>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-primary-content text-lg">月別推移</h2>
-            <MonthlyTotalChart files={files} />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <h2 className="text-primary-content text-lg">年間予算</h2>
-            <p className="text-info text-sm">
-              年予算は設定ページから各カテゴリに設定できます。未設定のカテゴリは過去データの月平均×12を暫定値として表示します。
-            </p>
-            <AnnualBudgetSummary />
-          </div>
-        </>
+        <div className="flex flex-col gap-2">
+          <h2 className="text-primary-content text-lg">月別推移</h2>
+          <MonthlyTotalChart files={files} />
+        </div>
       )}
+
+      <div className="flex flex-col gap-2">
+        <h2 className="text-primary-content text-lg">年間予算</h2>
+        <p className="text-info text-sm">
+          年予算は設定ページから各カテゴリに設定できます。未設定のカテゴリは過去データの月平均×12を暫定値として表示します。
+        </p>
+        <AnnualBudgetSummary />
+      </div>
 
       <div>
         <h2 className="text-primary-content text-lg">ファイル一覧</h2>

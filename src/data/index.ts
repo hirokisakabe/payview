@@ -7,6 +7,7 @@ export {
   usePayments,
   usePaymentsFiles,
   usePaymentsByCategory,
+  useAnnualBudgetSummary,
   deletePaymentFile,
   addPayments,
   AddPaymentsConstraintError,

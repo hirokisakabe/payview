@@ -131,3 +131,32 @@ test("正常系: 確定前フォーマット（13カラム）のCSVがパース�
     },
   ]);
 });
+
+test("正常系: エクスポートフォーマット（BOM付き・クォート・ヘッダー行あり）のCSVがパースされる", async () => {
+  const mockCsvData = [
+    {
+      date: "2025/12/31",
+      price: "6350",
+      category: "食費",
+      name: "バロー",
+    },
+  ];
+  // 実際のエクスポートCSVはBOM付きで全セルがダブルクォートされる
+  const exportFormatCsv =
+    '﻿"日付","金額","カテゴリ","説明"\n"2025/12/31","6350","食費","バロー"';
+  vi.mocked(Encoding.convert).mockReturnValue(exportFormatCsv as never);
+  vi.mocked(parse).mockReturnValue(mockCsvData as never);
+
+  const file = createMockFile(exportFormatCsv, "test.csv");
+  const result = await convertFileToCsvData({ file });
+
+  // エクスポートフォーマットはcount=1で正規化され、説明がnameになる
+  expect(result.csvData).toEqual([
+    {
+      date: "2025/12/31",
+      name: "バロー",
+      price: "6350",
+      count: "1",
+    },
+  ]);
+});

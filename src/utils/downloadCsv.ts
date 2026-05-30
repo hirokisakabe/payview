@@ -1,4 +1,4 @@
-function sanitizeCell(cell: string): string {
+export function sanitizeCell(cell: string): string {
   const escaped = cell.replace(/"/g, '""');
   // CSV injection 対策: =,+,-,@ で始まる値の前に ' を付与
   if (/^[=+\-@]/.test(escaped)) {

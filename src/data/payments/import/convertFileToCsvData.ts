@@ -32,15 +32,27 @@ const PENDING_FORMAT_COLUMNS = [
   "exchangeDate",
 ];
 
-function detectFormat(text: string): string[] {
+// エクスポートフォーマット（4カラム、ヘッダー行あり）: 日付, 金額, カテゴリ, 説明
+const EXPORT_FORMAT_COLUMNS = ["date", "price", "category", "name"];
+
+type FormatConfig = { columns: string[]; fromLine: number };
+
+function detectFormat(text: string): FormatConfig {
   const lines = text.split("\n").filter((line) => line.trim().length > 0);
   if (lines.length === 0) {
-    return CONFIRMED_FORMAT_COLUMNS;
+    return { columns: CONFIRMED_FORMAT_COLUMNS, fromLine: 1 };
+  }
+  if (lines[0].startsWith("日付,金額,カテゴリ,説明")) {
+    return { columns: EXPORT_FORMAT_COLUMNS, fromLine: 2 };
   }
   const firstLineColumnCount = lines[0].split(",").length;
-  return firstLineColumnCount >= 13
-    ? PENDING_FORMAT_COLUMNS
-    : CONFIRMED_FORMAT_COLUMNS;
+  return {
+    columns:
+      firstLineColumnCount >= 13
+        ? PENDING_FORMAT_COLUMNS
+        : CONFIRMED_FORMAT_COLUMNS,
+    fromLine: 1,
+  };
 }
 
 function normalizeToCommonFormat(
@@ -49,6 +61,15 @@ function normalizeToCommonFormat(
 ): unknown[] {
   // 確定前フォーマットの場合、countをデフォルト値1に設定
   if (columns === PENDING_FORMAT_COLUMNS) {
+    return csvData.map((row) => ({
+      date: row.date,
+      name: row.name,
+      price: row.price,
+      count: "1",
+    }));
+  }
+  // エクスポートフォーマットの場合、説明をname、countを1に設定
+  if (columns === EXPORT_FORMAT_COLUMNS) {
     return csvData.map((row) => ({
       date: row.date,
       name: row.name,
@@ -74,12 +95,13 @@ export async function convertFileToCsvData(input: Input): Promise<Output> {
         ? paymentTextArray
         : String.fromCharCode(...paymentTextArray);
 
-    const columns = detectFormat(paymentText);
+    const { columns, fromLine } = detectFormat(paymentText);
 
     const rawCsvData: Record<string, string>[] = parse(paymentTextArray, {
       columns,
       skip_empty_lines: true,
       skipRecordsWithError: true,
+      from_line: fromLine,
     });
 
     csvData = normalizeToCommonFormat(rawCsvData, columns);

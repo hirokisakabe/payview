@@ -38,11 +38,16 @@ const EXPORT_FORMAT_COLUMNS = ["date", "price", "category", "name"];
 type FormatConfig = { columns: string[]; fromLine: number };
 
 function detectFormat(text: string): FormatConfig {
-  const lines = text.split("\n").filter((line) => line.trim().length > 0);
+  const textWithoutBom = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+  const lines = textWithoutBom
+    .split("\n")
+    .filter((line) => line.trim().length > 0);
   if (lines.length === 0) {
     return { columns: CONFIRMED_FORMAT_COLUMNS, fromLine: 1 };
   }
-  if (lines[0].startsWith("日付,金額,カテゴリ,説明")) {
+  // ダブルクォートを除去してヘッダー行を比較（エクスポートCSVは全セルクォート済み）
+  const firstLineUnquoted = lines[0].replace(/"/g, "");
+  if (firstLineUnquoted.startsWith("日付,金額,カテゴリ,説明")) {
     return { columns: EXPORT_FORMAT_COLUMNS, fromLine: 2 };
   }
   const firstLineColumnCount = lines[0].split(",").length;

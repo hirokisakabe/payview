@@ -134,8 +134,9 @@ describe("RootPage", () => {
       });
     });
 
-    test("異常系: 同じファイル名で2回アップロードするとAddPaymentsConstraintErrorが表示される", async () => {
+    test("異常系: 同じファイル名で2回アップロードすると上書き確認ダイアログが表示される", async () => {
       const user = userEvent.setup();
+      mockConfirm.mockReturnValue(false);
       renderWithRouter({ component: <RootPage /> });
 
       const file1 = createTestCsvFile("duplicate.csv", [
@@ -162,9 +163,51 @@ describe("RootPage", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith(
-          "ファイルは既に登録されています。別のファイルを選択してください。",
+        expect(mockConfirm).toHaveBeenCalledWith(
+          "duplicate.csv はすでに登録されています。上書きしますか？",
         );
+      });
+    });
+
+    test("正常系: 上書き確認ダイアログで「上書きする」を選択するとデータが更新される", async () => {
+      const user = userEvent.setup();
+      renderWithRouter({ component: <RootPage /> });
+
+      const file1 = createTestCsvFile("duplicate.csv", [
+        { date: "2024/01/01", name: "食費", price: 1000 },
+      ]);
+
+      const fileInput = await getFileInput();
+      await user.upload(fileInput, file1);
+
+      const submitButton = screen.getByRole("button", { name: "登録" });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText("duplicate.csv")).toBeInTheDocument();
+      });
+
+      // Second upload with same file name - confirm overwrite
+      mockConfirm.mockReturnValue(true);
+
+      const file2 = createTestCsvFile("duplicate.csv", [
+        { date: "2024/02/01", name: "交通費", price: 500 },
+      ]);
+
+      await user.upload(fileInput, file2);
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockConfirm).toHaveBeenCalledWith(
+          "duplicate.csv はすでに登録されています。上書きしますか？",
+        );
+      });
+
+      // Verify data is updated
+      await waitFor(async () => {
+        const storedFile = await db.paymentFiles.get("duplicate.csv");
+        expect(storedFile?.payments).toHaveLength(1);
+        expect(storedFile?.payments[0].name).toBe("交通費");
       });
     });
   });

@@ -1,6 +1,7 @@
 import { beforeEach, expect, test, vi } from "vitest";
 import {
   createPayments,
+  upsertPayments,
   CreatePaymentsConstraintError,
 } from "./createPayments";
 
@@ -8,6 +9,7 @@ vi.mock("../../db", () => ({
   db: {
     paymentFiles: {
       bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
   },
 }));
@@ -57,9 +59,29 @@ test("異常系: 重複ファイルの場合、CreatePaymentsConstraintErrorをt
         payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
       },
     ]),
-  ).rejects.toThrow(
-    "ファイルは既に登録されています。別のファイルを選択してください。",
-  );
+  ).rejects.toThrow("ファイルは既に登録されています。");
+});
+
+test("異常系: BulkErrorの場合、conflictingFileNamesにfailedKeysが含まれる", async () => {
+  const constraintError = Object.assign(new Error("BulkError"), {
+    name: "BulkError",
+    failures: [
+      Object.assign(new Error("ConstraintError"), { name: "ConstraintError" }),
+    ],
+    failedKeys: ["duplicate.csv"],
+  });
+  vi.mocked(db.paymentFiles.bulkAdd).mockRejectedValue(constraintError);
+
+  const result = createPayments([
+    {
+      fileName: "duplicate.csv",
+      payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+    },
+  ]);
+
+  await expect(result).rejects.toMatchObject({
+    conflictingFileNames: ["duplicate.csv"],
+  });
 });
 
 test("異常系: その他のエラーの場合、CreatePaymentsUnknownErrorをthrowする", async () => {
@@ -75,4 +97,22 @@ test("異常系: その他のエラーの場合、CreatePaymentsUnknownErrorをt
       },
     ]),
   ).rejects.toThrow("不明なエラーが発生しました。");
+});
+
+test("upsertPayments: bulkPutを呼び出す", async () => {
+  vi.mocked(db.paymentFiles.bulkPut).mockResolvedValue([] as never);
+
+  await upsertPayments([
+    {
+      fileName: "test.csv",
+      payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+    },
+  ]);
+
+  expect(db.paymentFiles.bulkPut).toHaveBeenCalledWith([
+    {
+      fileName: "test.csv",
+      payments: [{ date: "2023-01-01", name: "食費", price: 1000, count: 1 }],
+    },
+  ]);
 });

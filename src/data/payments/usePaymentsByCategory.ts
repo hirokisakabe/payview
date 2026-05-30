@@ -31,6 +31,8 @@ type CategoryBreakdownItem = {
   name?: string;
   payments: PaymentDetail[];
   subBreakdown?: SubBreakdownItem[];
+  monthlyBudget?: number;
+  remaining?: number;
 };
 
 type UsePaymentsByCategoryResult =
@@ -123,7 +125,22 @@ export function usePaymentsByCategory({
       }
     }
 
-    const categorizedBreakdown = Array.from(categoryTotals.values());
+    const categorizedBreakdown = Array.from(categoryTotals.values()).map(
+      (item) => {
+        const categoryFull = categoriesWithRules.find(
+          (c) => c.id === item.category?.id,
+        );
+        const monthlyBudget = categoryFull?.monthlyBudget;
+        return {
+          ...item,
+          monthlyBudget,
+          remaining:
+            monthlyBudget !== undefined
+              ? monthlyBudget - item.total
+              : undefined,
+        };
+      },
+    );
 
     const allBreakdown: CategoryBreakdownItem[] = [...categorizedBreakdown];
 

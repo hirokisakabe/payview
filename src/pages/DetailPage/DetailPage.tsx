@@ -12,8 +12,9 @@ type Props = {
 export function DetailPage({ fileName, activeTab }: Props) {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <Tabs fileName={fileName} activeTab={activeTab} />
+      <Tabs fileName={fileName} activeTab={activeTab} />
+
+      <div className="flex justify-end">
         <CsvExportButton fileName={fileName} />
       </div>
 

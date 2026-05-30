@@ -9,11 +9,11 @@ import {
 } from "recharts";
 import { formatYen } from "../../../../utils/formatYen";
 
-type Props = {
-  data: { name: string; value: number }[];
-};
+import { DEFAULT_CATEGORY_COLORS } from "../../../../data/categories/categoryColors";
 
-const COLORS = ["#8B5CF6", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
+type Props = {
+  data: { name: string; value: number; color?: string }[];
+};
 
 export function PayviewCategoryBarChart({ data }: Props) {
   return (
@@ -25,7 +25,15 @@ export function PayviewCategoryBarChart({ data }: Props) {
           <Tooltip formatter={(value: number) => [formatYen(value), "金額"]} />
           <Bar dataKey="value">
             {data.map((item, index) => (
-              <Cell key={item.name} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={item.name}
+                fill={
+                  item.color ??
+                  DEFAULT_CATEGORY_COLORS[
+                    index % DEFAULT_CATEGORY_COLORS.length
+                  ]
+                }
+              />
             ))}
           </Bar>
         </BarChart>

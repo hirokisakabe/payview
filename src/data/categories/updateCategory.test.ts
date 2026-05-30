@@ -96,6 +96,48 @@ test("正常系: 既存の月予算が別の値に更新される", async () => 
   });
 });
 
+test("正常系: 色が更新される", async () => {
+  vi.mocked(db.categories.get).mockResolvedValue({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    color: "#8B5CF6",
+  } as never);
+  vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
+
+  await updateCategory({
+    id: "category-1",
+    name: "食費",
+    color: "#EF4444",
+  });
+
+  expect(db.categories.put).toHaveBeenCalledWith({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    color: "#EF4444",
+  });
+});
+
+test("正常系: 色が未指定の場合は既存の色を保持する", async () => {
+  vi.mocked(db.categories.get).mockResolvedValue({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    color: "#8B5CF6",
+  } as never);
+  vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
+
+  await updateCategory({ id: "category-1", name: "食費" });
+
+  expect(db.categories.put).toHaveBeenCalledWith({
+    id: "category-1",
+    name: "食費",
+    order: 0,
+    color: "#8B5CF6",
+  });
+});
+
 test("正常系: カテゴリが存在しない場合は何もしない", async () => {
   vi.mocked(db.categories.get).mockResolvedValue(undefined as never);
 

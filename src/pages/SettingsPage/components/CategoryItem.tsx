@@ -24,6 +24,7 @@ export function CategoryItem({ category }: Props) {
   const [editMonthlyBudget, setEditMonthlyBudget] = useState(
     category.monthlyBudget !== undefined ? String(category.monthlyBudget) : "",
   );
+  const [editColor, setEditColor] = useState(category.color ?? "#8B5CF6");
   const rulesResult = useCategoryRules({ categoryId: category.id });
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -56,6 +57,7 @@ export function CategoryItem({ category }: Props) {
         id: category.id,
         name: editName.trim(),
         monthlyBudget: parsedBudget,
+        color: editColor,
       });
       setIsEditing(false);
     } catch {
@@ -123,6 +125,7 @@ export function CategoryItem({ category }: Props) {
                     ? String(category.monthlyBudget)
                     : "",
                 );
+                setEditColor(category.color ?? "#8B5CF6");
               }
             }}
           >
@@ -134,6 +137,17 @@ export function CategoryItem({ category }: Props) {
                 placeholder="カテゴリ名"
                 onChange={(e) => setEditName(e.target.value)}
                 autoFocus
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-base-content/70 text-sm whitespace-nowrap">
+                カラー
+              </label>
+              <input
+                type="color"
+                className="h-8 w-14 cursor-pointer rounded border"
+                value={editColor}
+                onChange={(e) => setEditColor(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -169,6 +183,7 @@ export function CategoryItem({ category }: Props) {
                       ? String(category.monthlyBudget)
                       : "",
                   );
+                  setEditColor(category.color ?? "#8B5CF6");
                 }}
               >
                 キャンセル
@@ -177,7 +192,13 @@ export function CategoryItem({ category }: Props) {
           </form>
         ) : (
           <>
-            <span className="flex-1 font-medium">{category.name}</span>
+            <span className="flex flex-1 items-center gap-2 font-medium">
+              <span
+                className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
+                style={{ backgroundColor: category.color ?? "#8B5CF6" }}
+              />
+              {category.name}
+            </span>
             {category.monthlyBudget !== undefined && (
               <span className="text-base-content/60 text-sm">
                 月予算 {category.monthlyBudget.toLocaleString()}円

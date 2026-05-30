@@ -13,6 +13,7 @@ type PaymentDetail = {
 type CategoryInfo = {
   id: string;
   name: string;
+  color?: string;
 } | null;
 
 type SubBreakdownItem = {
@@ -93,7 +94,13 @@ export function CategoryBreakdownRow({ item, index }: Props) {
             )}
           </span>
           {item.category ? (
-            <span className="badge badge-primary">{item.category.name}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
+                style={{ backgroundColor: item.category.color ?? "#8B5CF6" }}
+              />
+              <span>{item.category.name}</span>
+            </span>
           ) : (
             <span className="text-base-content/60">未分類</span>
           )}

@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from "dexie";
+import { DEFAULT_CATEGORY_COLORS } from "./categories/categoryColors";
 
 type Payment = {
   name: string;
@@ -17,6 +18,7 @@ interface Category {
   name: string;
   order: number;
   monthlyBudget?: number;
+  color?: string;
 }
 
 interface CategoryRule {
@@ -79,6 +81,30 @@ db.version(4)
             ? { ...rest, monthlyBudget: annualBudget }
             : rest;
         },
+      ),
+    );
+  });
+
+db.version(5)
+  .stores({
+    paymentFiles: "fileName",
+    categories: "id, order",
+    categoryRules: "id, categoryId, order",
+  })
+  .upgrade(async (tx) => {
+    const categories = await tx.table("categories").orderBy("order").toArray();
+    await tx.table("categories").bulkPut(
+      categories.map(
+        (cat: { color?: string; [key: string]: unknown }, index: number) =>
+          cat.color === undefined
+            ? {
+                ...cat,
+                color:
+                  DEFAULT_CATEGORY_COLORS[
+                    index % DEFAULT_CATEGORY_COLORS.length
+                  ],
+              }
+            : cat,
       ),
     );
   });

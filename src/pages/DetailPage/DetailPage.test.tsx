@@ -100,8 +100,8 @@ describe("DetailPage", () => {
       });
 
       await waitFor(() => {
-        // Category name should appear
-        expect(screen.getByText("食費")).toBeInTheDocument();
+        // Category name should appear (may appear in both budget summary and breakdown)
+        expect(screen.getAllByText("食費").length).toBeGreaterThan(0);
       });
     });
 

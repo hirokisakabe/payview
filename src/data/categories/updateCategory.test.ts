@@ -33,7 +33,7 @@ test("正常系: カテゴリ名が更新される", async () => {
   });
 });
 
-test("正常系: 年予算が設定される", async () => {
+test("正常系: 月予算が設定される", async () => {
   vi.mocked(db.categories.get).mockResolvedValue({
     id: "category-1",
     name: "食費",
@@ -44,23 +44,23 @@ test("正常系: 年予算が設定される", async () => {
   await updateCategory({
     id: "category-1",
     name: "食費",
-    annualBudget: 120000,
+    monthlyBudget: 120000,
   });
 
   expect(db.categories.put).toHaveBeenCalledWith({
     id: "category-1",
     name: "食費",
     order: 0,
-    annualBudget: 120000,
+    monthlyBudget: 120000,
   });
 });
 
-test("正常系: 年予算が削除される（undefinedを渡す）", async () => {
+test("正常系: 月予算が削除される（undefinedを渡す）", async () => {
   vi.mocked(db.categories.get).mockResolvedValue({
     id: "category-1",
     name: "食費",
     order: 0,
-    annualBudget: 120000,
+    monthlyBudget: 120000,
   } as never);
   vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
 
@@ -73,26 +73,26 @@ test("正常系: 年予算が削除される（undefinedを渡す）", async () 
   });
 });
 
-test("正常系: 既存の年予算が別の値に更新される", async () => {
+test("正常系: 既存の月予算が別の値に更新される", async () => {
   vi.mocked(db.categories.get).mockResolvedValue({
     id: "category-1",
     name: "食費",
     order: 0,
-    annualBudget: 60000,
+    monthlyBudget: 60000,
   } as never);
   vi.mocked(db.categories.put).mockResolvedValue("category-1" as never);
 
   await updateCategory({
     id: "category-1",
     name: "食費",
-    annualBudget: 120000,
+    monthlyBudget: 120000,
   });
 
   expect(db.categories.put).toHaveBeenCalledWith({
     id: "category-1",
     name: "食費",
     order: 0,
-    annualBudget: 120000,
+    monthlyBudget: 120000,
   });
 });
 

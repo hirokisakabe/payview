@@ -11,6 +11,15 @@ vi.mock("../../db", () => ({
       bulkAdd: vi.fn(),
       bulkPut: vi.fn(),
     },
+    transaction: vi.fn(
+      async (
+        _mode: string,
+        _tables: unknown,
+        callback: () => Promise<void>,
+      ) => {
+        return await callback();
+      },
+    ),
   },
 }));
 

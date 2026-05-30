@@ -5,12 +5,15 @@ type Input = { fileName: string; payments: Payment[] }[];
 
 export async function createPayments(items: Input): Promise<void> {
   try {
-    await db.paymentFiles.bulkAdd(
-      items.map((item) => ({
-        fileName: item.fileName,
-        payments: item.payments,
-      })),
-    );
+    // トランザクションで包むことで、一部が重複した場合に成功分もロールバックする
+    await db.transaction("rw", db.paymentFiles, async () => {
+      await db.paymentFiles.bulkAdd(
+        items.map((item) => ({
+          fileName: item.fileName,
+          payments: item.payments,
+        })),
+      );
+    });
   } catch (err) {
     if (isDexieConstraintError(err)) {
       const conflictingFileNames = extractConflictingFileNames(err, items);

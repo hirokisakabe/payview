@@ -2,6 +2,7 @@ import { Link, Outlet } from "@tanstack/react-router";
 import clsx from "clsx";
 import { FileNavigation } from "./FileNavigation";
 import { TotalAmount } from "./TotalAmount";
+import { CsvExportButton } from "./CsvExportButton";
 
 type Props = {
   fileName: string;
@@ -13,7 +14,10 @@ export function Tabs({ fileName, activeTab }: Props) {
     <>
       <FileNavigation fileName={fileName} activeTab={activeTab} />
 
-      <TotalAmount fileName={fileName} />
+      <div className="flex items-center justify-between">
+        <TotalAmount fileName={fileName} />
+        <CsvExportButton fileName={fileName} />
+      </div>
 
       <div role="tablist" className="tabs tabs-border">
         <Link

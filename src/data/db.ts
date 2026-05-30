@@ -72,12 +72,14 @@ db.version(4)
   .upgrade(async (tx) => {
     const categories = await tx.table("categories").toArray();
     await tx.table("categories").bulkPut(
-      categories.map((cat: { annualBudget?: number; [key: string]: unknown }) => {
-        const { annualBudget, ...rest } = cat;
-        return annualBudget !== undefined
-          ? { ...rest, monthlyBudget: annualBudget }
-          : rest;
-      }),
+      categories.map(
+        (cat: { annualBudget?: number; [key: string]: unknown }) => {
+          const { annualBudget, ...rest } = cat;
+          return annualBudget !== undefined
+            ? { ...rest, monthlyBudget: annualBudget }
+            : rest;
+        },
+      ),
     );
   });
 

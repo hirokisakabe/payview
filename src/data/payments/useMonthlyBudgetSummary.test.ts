@@ -147,7 +147,9 @@ test("正常系: 支出が月予算を超えた場合、remainingが負になる
         },
       ],
     },
-    categories: [{ id: "cat-1", name: "旅行費", order: 0, monthlyBudget: 50000 }],
+    categories: [
+      { id: "cat-1", name: "旅行費", order: 0, monthlyBudget: 50000 },
+    ],
     allRules: [
       { id: "rule-1", categoryId: "cat-1", pattern: "旅行", order: 0 },
     ],
@@ -191,9 +193,7 @@ test("正常系: 月予算あり・ファイル内支出ゼロのカテゴリも
 test("正常系: 指定されたファイルが存在しない場合、空の結果を返す", () => {
   vi.mocked(useLiveQuery).mockReturnValue({
     paymentFile: undefined,
-    categories: [
-      { id: "cat-1", name: "食費", order: 0, monthlyBudget: 20000 },
-    ],
+    categories: [{ id: "cat-1", name: "食費", order: 0, monthlyBudget: 20000 }],
     allRules: [],
   });
 

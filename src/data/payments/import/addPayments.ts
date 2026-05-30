@@ -1,6 +1,7 @@
 import { convertCsvDataToPaymentData } from "./convertCsvDataToPaymentData";
 import {
   createPayments,
+  upsertPayments as upsertPaymentsCore,
   CreatePaymentsConstraintError,
 } from "./createPayments";
 import {
@@ -9,7 +10,9 @@ import {
 } from "./convertFileToCsvData";
 import type { Payment } from "./paymentSchema";
 
-export async function addPayments(files: File[]): Promise<void> {
+async function buildPaymentData(
+  files: File[],
+): Promise<{ fileName: string; payments: Payment[] }[]> {
   // Step 1: CSVファイルをパース
   let csvDataList: { fileName: string; csvData: unknown[] }[];
   try {
@@ -60,12 +63,14 @@ export async function addPayments(files: File[]): Promise<void> {
     }),
   }));
 
-  const filteredPaymentData = sortedPaymentData.map(
-    ({ fileName, payments }) => ({
-      fileName,
-      payments: payments.filter((payment) => payment.name.length > 0),
-    }),
-  );
+  return sortedPaymentData.map(({ fileName, payments }) => ({
+    fileName,
+    payments: payments.filter((payment) => payment.name.length > 0),
+  }));
+}
+
+export async function addPayments(files: File[]): Promise<void> {
+  const filteredPaymentData = await buildPaymentData(files);
 
   // Step 4: DBに保存
   try {
@@ -73,13 +78,18 @@ export async function addPayments(files: File[]): Promise<void> {
   } catch (err) {
     console.error(err);
     if (err instanceof CreatePaymentsConstraintError) {
-      throw new AddPaymentsConstraintError(
-        "ファイルは既に登録されています。別のファイルを選択してください。",
-        { cause: err },
-      );
+      throw new AddPaymentsConstraintError("ファイルは既に登録されています。", {
+        cause: err,
+        conflictingFileNames: err.conflictingFileNames,
+      });
     }
     throw new Error("不明なエラーが発生しました。", { cause: err });
   }
+}
+
+export async function upsertPayments(files: File[]): Promise<void> {
+  const filteredPaymentData = await buildPaymentData(files);
+  await upsertPaymentsCore(filteredPaymentData);
 }
 
 export class AddPaymentsInvalidFileError extends Error {
@@ -92,8 +102,13 @@ export class AddPaymentsInvalidFileError extends Error {
 
 export class AddPaymentsConstraintError extends Error {
   override readonly name = "AddPaymentsConstraintError" as const;
-  constructor(message: string, options?: { cause: unknown }) {
+  readonly conflictingFileNames: string[];
+  constructor(
+    message: string,
+    options?: { cause: unknown; conflictingFileNames?: string[] },
+  ) {
     super(message, options);
     this.cause = options?.cause;
+    this.conflictingFileNames = options?.conflictingFileNames ?? [];
   }
 }

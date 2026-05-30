@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import {
   addPayments,
+  upsertPayments,
   AddPaymentsConstraintError,
   AddPaymentsInvalidFileError,
   usePaymentsFiles,
@@ -44,9 +45,23 @@ export function RootPage() {
       }
 
       if (err instanceof AddPaymentsConstraintError) {
-        alert(
-          "ファイルは既に登録されています。別のファイルを選択してください。",
-        );
+        const names = err.conflictingFileNames.join("、");
+        const message =
+          names.length > 0
+            ? `${names} はすでに登録されています。上書きしますか？`
+            : "選択したファイルはすでに登録されています。上書きしますか？";
+        if (!confirm(message)) {
+          return;
+        }
+        try {
+          await upsertPayments(selectedFiles);
+          setSelectedFiles(undefined);
+          if (fileInputRef.current) {
+            (fileInputRef.current as HTMLInputElement).value = "";
+          }
+        } catch {
+          alert("ファイルの上書きに失敗しました。");
+        }
         return;
       }
 

@@ -1,6 +1,7 @@
 import { beforeEach, expect, test, vi } from "vitest";
 import {
   addPayments,
+  upsertPayments,
   AddPaymentsConstraintError,
   AddPaymentsInvalidFileError,
 } from "./addPayments";
@@ -10,11 +11,20 @@ import {
 } from "./convertFileToCsvData";
 import {
   createPayments,
+  upsertPayments as upsertPaymentsCore,
   CreatePaymentsConstraintError,
 } from "./createPayments";
 import { convertCsvDataToPaymentData } from "./convertCsvDataToPaymentData";
 
-vi.mock("./createPayments");
+// createPayments と upsertPayments のみをモックし、クラスは実実装を使う
+vi.mock("./createPayments", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./createPayments")>();
+  return {
+    ...actual,
+    createPayments: vi.fn(),
+    upsertPayments: vi.fn(),
+  };
+});
 vi.mock("./convertFileToCsvData");
 vi.mock("./convertCsvDataToPaymentData");
 
@@ -49,6 +59,7 @@ beforeEach(() => {
   });
 
   vi.mocked(createPayments).mockResolvedValue(undefined);
+  vi.mocked(upsertPaymentsCore).mockResolvedValue(undefined);
 });
 
 test("正常系: データ登録", async () => {
@@ -93,10 +104,29 @@ test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)"
   );
 });
 
+test("異常系: IndexedDBへの登録でエラーが発生した場合(重複)、conflictingFileNamesが伝播する", async () => {
+  vi.mocked(createPayments).mockRejectedValue(
+    new CreatePaymentsConstraintError("dummy_message", {
+      cause: undefined,
+      conflictingFileNames: ["test1.csv"],
+    }),
+  );
+
+  const result = addPayments(dummyFiles);
+  await expect(result).rejects.toMatchObject({
+    conflictingFileNames: ["test1.csv"],
+  });
+});
+
 test("異常系: IndexedDBへの登録でエラーが発生した場合", async () => {
   vi.mocked(createPayments).mockRejectedValue(new Error("dummy_message"));
 
   await expect(addPayments(dummyFiles)).rejects.toThrow(
     "不明なエラーが発生しました。",
   );
+});
+
+test("upsertPayments: 正常系", async () => {
+  await expect(upsertPayments(dummyFiles)).resolves.toBeUndefined();
+  expect(upsertPaymentsCore).toHaveBeenCalled();
 });

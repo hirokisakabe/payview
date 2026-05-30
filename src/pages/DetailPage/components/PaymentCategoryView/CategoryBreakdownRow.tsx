@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { PaymentDetailTable } from "./PaymentDetailTable";
 import { formatYen } from "../../../../utils/formatYen";
-import { DEFAULT_CATEGORY_COLORS } from "../../../../data/categories/categoryColors";
+import { resolveCategoryColor } from "../../../../data/categories/categoryColors";
 
 type PaymentDetail = {
   name: string;
@@ -99,8 +99,10 @@ export function CategoryBreakdownRow({ item, index }: Props) {
               <span
                 className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
                 style={{
-                  backgroundColor:
-                    item.category.color ?? DEFAULT_CATEGORY_COLORS[0],
+                  backgroundColor: resolveCategoryColor(
+                    item.category.color,
+                    index,
+                  ),
                 }}
               />
               <span>{item.category.name}</span>

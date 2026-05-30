@@ -91,14 +91,26 @@ export async function convertFileToCsvData(input: Input): Promise<Output> {
   try {
     const arrayBuffer = await input.file.arrayBuffer();
     const uint8 = new Uint8Array(arrayBuffer);
-    const paymentTextArray = Encoding.convert(uint8, {
-      from: "SJIS",
-      to: "UTF8",
-    });
-    const paymentText =
-      typeof paymentTextArray === "string"
-        ? paymentTextArray
-        : String.fromCharCode(...paymentTextArray);
+
+    // UTF-8 BOM (0xEF 0xBB 0xBF) があればそのままデコード、なければ SJIS→UTF8 変換
+    const isUtf8WithBom =
+      uint8.length >= 3 &&
+      uint8[0] === 0xef &&
+      uint8[1] === 0xbb &&
+      uint8[2] === 0xbf;
+
+    let paymentTextArray: string | number[];
+    let paymentText: string;
+    if (isUtf8WithBom) {
+      paymentText = new TextDecoder("utf-8").decode(uint8.slice(3));
+      paymentTextArray = paymentText;
+    } else {
+      paymentTextArray = Encoding.convert(uint8, { from: "SJIS", to: "UTF8" });
+      paymentText =
+        typeof paymentTextArray === "string"
+          ? paymentTextArray
+          : String.fromCharCode(...paymentTextArray);
+    }
 
     const { columns, fromLine } = detectFormat(paymentText);
 

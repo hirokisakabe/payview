@@ -15,9 +15,9 @@ export async function seedIfNeeded(): Promise<void> {
     "rw",
     [db.paymentFiles, db.categories, db.categoryRules],
     async () => {
-      await db.paymentFiles.bulkAdd(SEED_PAYMENT_FILES);
-      await db.categories.bulkAdd(SEED_CATEGORIES);
-      await db.categoryRules.bulkAdd(SEED_CATEGORY_RULES);
+      await db.paymentFiles.bulkPut(SEED_PAYMENT_FILES);
+      await db.categories.bulkPut(SEED_CATEGORIES);
+      await db.categoryRules.bulkPut(SEED_CATEGORY_RULES);
     },
   );
 }

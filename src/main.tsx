@@ -13,7 +13,7 @@ declare module "@tanstack/react-router" {
   }
 }
 
-void seedIfNeeded().then(() => {
+const renderApp = () => {
   const rootElement = document.getElementById("root")!;
   if (!rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
@@ -23,4 +23,9 @@ void seedIfNeeded().then(() => {
       </StrictMode>,
     );
   }
+};
+
+void seedIfNeeded().then(renderApp, (err) => {
+  console.error("seed failed:", err);
+  renderApp();
 });

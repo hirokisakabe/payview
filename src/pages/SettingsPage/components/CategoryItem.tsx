@@ -9,6 +9,7 @@ import {
 import { type Category } from "../../../data/db";
 import { updateCategory } from "../../../data/categories/updateCategory";
 import { deleteCategory } from "../../../data/categories/deleteCategory";
+import { DEFAULT_CATEGORY_COLORS } from "../../../data/categories/categoryColors";
 import { useCategoryRules } from "../../../data/categories/useCategoryRules";
 import { CategoryRuleList } from "./CategoryRuleList";
 import { AddCategoryRuleForm } from "./AddCategoryRuleForm";
@@ -23,6 +24,9 @@ export function CategoryItem({ category }: Props) {
   const [editName, setEditName] = useState(category.name);
   const [editMonthlyBudget, setEditMonthlyBudget] = useState(
     category.monthlyBudget !== undefined ? String(category.monthlyBudget) : "",
+  );
+  const [editColor, setEditColor] = useState(
+    category.color ?? DEFAULT_CATEGORY_COLORS[0],
   );
   const rulesResult = useCategoryRules({ categoryId: category.id });
 
@@ -56,6 +60,7 @@ export function CategoryItem({ category }: Props) {
         id: category.id,
         name: editName.trim(),
         monthlyBudget: parsedBudget,
+        color: editColor,
       });
       setIsEditing(false);
     } catch {
@@ -123,6 +128,7 @@ export function CategoryItem({ category }: Props) {
                     ? String(category.monthlyBudget)
                     : "",
                 );
+                setEditColor(category.color ?? DEFAULT_CATEGORY_COLORS[0]);
               }
             }}
           >
@@ -134,6 +140,17 @@ export function CategoryItem({ category }: Props) {
                 placeholder="カテゴリ名"
                 onChange={(e) => setEditName(e.target.value)}
                 autoFocus
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-base-content/70 text-sm whitespace-nowrap">
+                カラー
+              </label>
+              <input
+                type="color"
+                className="h-8 w-14 cursor-pointer rounded border"
+                value={editColor}
+                onChange={(e) => setEditColor(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -169,6 +186,7 @@ export function CategoryItem({ category }: Props) {
                       ? String(category.monthlyBudget)
                       : "",
                   );
+                  setEditColor(category.color ?? DEFAULT_CATEGORY_COLORS[0]);
                 }}
               >
                 キャンセル
@@ -177,7 +195,15 @@ export function CategoryItem({ category }: Props) {
           </form>
         ) : (
           <>
-            <span className="flex-1 font-medium">{category.name}</span>
+            <span className="flex flex-1 items-center gap-2 font-medium">
+              <span
+                className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
+                style={{
+                  backgroundColor: category.color ?? DEFAULT_CATEGORY_COLORS[0],
+                }}
+              />
+              {category.name}
+            </span>
             {category.monthlyBudget !== undefined && (
               <span className="text-base-content/60 text-sm">
                 月予算 {category.monthlyBudget.toLocaleString()}円

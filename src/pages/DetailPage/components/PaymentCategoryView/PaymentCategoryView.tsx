@@ -29,6 +29,7 @@ export function PaymentCategoryView({ fileName }: Props) {
   const chartData = breakdown.slice(0, 20).map((item) => ({
     name: item.category?.name || "未分類",
     value: item.total,
+    color: item.category?.color,
   }));
 
   const hasNoData = breakdown.length === 0;

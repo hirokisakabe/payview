@@ -19,7 +19,7 @@ beforeEach(() => {
   });
 });
 
-test("正常系: カテゴリが存在しない場合、order=0で追加される", async () => {
+test("正常系: カテゴリが存在しない場合、order=0でデフォルト色付きで追加される", async () => {
   vi.mocked(db.categories.orderBy).mockReturnValue({
     last: vi.fn().mockResolvedValue(undefined),
   } as never);
@@ -32,10 +32,11 @@ test("正常系: カテゴリが存在しない場合、order=0で追加され�
     id: "test-uuid-1234",
     name: "食費",
     order: 0,
+    color: "#8B5CF6",
   });
 });
 
-test("正常系: 既存カテゴリがある場合、order=maxOrder+1で追加される", async () => {
+test("正常系: 既存カテゴリがある場合、order=maxOrder+1でデフォルト色付きで追加される", async () => {
   vi.mocked(db.categories.orderBy).mockReturnValue({
     last: vi.fn().mockResolvedValue({ id: "existing", name: "既存", order: 5 }),
   } as never);
@@ -48,6 +49,24 @@ test("正常系: 既存カテゴリがある場合、order=maxOrder+1で追加�
     id: "test-uuid-1234",
     name: "交通費",
     order: 6,
+    color: "#EC4899",
+  });
+});
+
+test("正常系: 色を明示指定した場合、指定色で追加される", async () => {
+  vi.mocked(db.categories.orderBy).mockReturnValue({
+    last: vi.fn().mockResolvedValue(undefined),
+  } as never);
+  vi.mocked(db.categories.add).mockResolvedValue("test-uuid-1234" as never);
+
+  const result = await addCategory({ name: "食費", color: "#FF0000" });
+
+  expect(result).toBe("test-uuid-1234");
+  expect(db.categories.add).toHaveBeenCalledWith({
+    id: "test-uuid-1234",
+    name: "食費",
+    order: 0,
+    color: "#FF0000",
   });
 });
 

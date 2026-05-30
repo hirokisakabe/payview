@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { PaymentDetailTable } from "./PaymentDetailTable";
 import { formatYen } from "../../../../utils/formatYen";
+import { DEFAULT_CATEGORY_COLORS } from "../../../../data/categories/categoryColors";
 
 type PaymentDetail = {
   name: string;
@@ -13,6 +14,7 @@ type PaymentDetail = {
 type CategoryInfo = {
   id: string;
   name: string;
+  color?: string;
 } | null;
 
 type SubBreakdownItem = {
@@ -93,7 +95,16 @@ export function CategoryBreakdownRow({ item, index }: Props) {
             )}
           </span>
           {item.category ? (
-            <span className="badge badge-primary">{item.category.name}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
+                style={{
+                  backgroundColor:
+                    item.category.color ?? DEFAULT_CATEGORY_COLORS[0],
+                }}
+              />
+              <span>{item.category.name}</span>
+            </span>
           ) : (
             <span className="text-base-content/60">未分類</span>
           )}

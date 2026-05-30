@@ -1,11 +1,10 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { formatYen } from "../../../../utils/formatYen";
+import { DEFAULT_CATEGORY_COLORS } from "../../../../data/categories/categoryColors";
 
 type Props = {
-  data: { name: string; value: number }[];
+  data: { name: string; value: number; color?: string }[];
 };
-
-const COLORS = ["#8B5CF6", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
 
 export function PayviewCategoryPieChart({ data }: Props) {
   return (
@@ -23,7 +22,15 @@ export function PayviewCategoryPieChart({ data }: Props) {
             endAngle={-270}
           >
             {data.map((item, index) => (
-              <Cell key={item.name} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={item.name}
+                fill={
+                  item.color ??
+                  DEFAULT_CATEGORY_COLORS[
+                    index % DEFAULT_CATEGORY_COLORS.length
+                  ]
+                }
+              />
             ))}
           </Pie>
           <Tooltip

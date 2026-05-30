@@ -9,6 +9,7 @@ type Props = {
 type CategoryInfo = {
   id: string;
   name: string;
+  color?: string;
 } | null;
 
 type PaymentDetail = {
@@ -65,7 +66,11 @@ export function usePaymentsByCategory({
           if (
             normalizeSpaces(paymentName).includes(normalizeSpaces(rule.pattern))
           ) {
-            return { id: category.id, name: category.name };
+            return {
+              id: category.id,
+              name: category.name,
+              color: category.color,
+            };
           }
         }
       }

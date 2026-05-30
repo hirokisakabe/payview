@@ -17,6 +17,7 @@ interface Category {
   name: string;
   order: number;
   monthlyBudget?: number;
+  color?: string;
 }
 
 interface CategoryRule {
@@ -79,6 +80,41 @@ db.version(4)
             ? { ...rest, monthlyBudget: annualBudget }
             : rest;
         },
+      ),
+    );
+  });
+
+// このスナップショットは v4→v5 マイグレーション専用。後から変更しないこと。
+const V5_MIGRATION_COLORS = [
+  "#8B5CF6",
+  "#06B6D4",
+  "#10B981",
+  "#F59E0B",
+  "#EF4444",
+  "#3B82F6",
+  "#EC4899",
+  "#84CC16",
+  "#F97316",
+  "#6366F1",
+];
+
+db.version(5)
+  .stores({
+    paymentFiles: "fileName",
+    categories: "id, order",
+    categoryRules: "id, categoryId, order",
+  })
+  .upgrade(async (tx) => {
+    const categories = await tx.table("categories").orderBy("order").toArray();
+    await tx.table("categories").bulkPut(
+      categories.map(
+        (cat: { color?: string; [key: string]: unknown }, index: number) =>
+          cat.color === undefined
+            ? {
+                ...cat,
+                color: V5_MIGRATION_COLORS[index % V5_MIGRATION_COLORS.length],
+              }
+            : cat,
       ),
     );
   });

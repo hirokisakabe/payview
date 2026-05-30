@@ -15,7 +15,7 @@ type UseMonthlyBudgetSummaryResult =
   | { status: "completed"; items: MonthlyBudgetSummaryItem[] };
 
 function normalizeSpaces(s: string): string {
-  return s.replace(/　/g, " ").replace(/\s+/g, " ");
+  return s.replace(/\u3000/g, " ").replace(/\s+/g, " ");
 }
 
 export function useMonthlyBudgetSummary({

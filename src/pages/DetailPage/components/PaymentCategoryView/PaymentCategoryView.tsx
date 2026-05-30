@@ -30,6 +30,7 @@ export function PaymentCategoryView({ fileName }: Props) {
     name: item.category?.name || "未分類",
     value: item.total,
     color: item.category?.color,
+    budget: item.monthlyBudget,
   }));
 
   const hasNoData = breakdown.length === 0;

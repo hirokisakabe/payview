@@ -90,6 +90,8 @@ export function PaymentCategoryView({ fileName }: Props) {
                     <th>カテゴリ</th>
                     <th>件数</th>
                     <th>金額</th>
+                    <th>月予算</th>
+                    <th>残り</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import clsx from "clsx";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { PaymentDetailTable } from "./PaymentDetailTable";
 import { formatYen } from "../../../../utils/formatYen";
@@ -28,6 +29,8 @@ type CategoryBreakdownItem = {
   name?: string;
   payments: PaymentDetail[];
   subBreakdown?: SubBreakdownItem[];
+  monthlyBudget?: number;
+  remaining?: number;
 };
 
 type Props = {
@@ -60,7 +63,7 @@ function SubBreakdownRow({ item }: { item: SubBreakdownItem }) {
 
       {isExpanded && (
         <tr>
-          <td colSpan={3} className="p-0">
+          <td colSpan={5} className="p-0">
             <PaymentDetailTable payments={item.payments} />
           </td>
         </tr>
@@ -97,6 +100,28 @@ export function CategoryBreakdownRow({ item, index }: Props) {
         </td>
         <td>{item.count} 件</td>
         <td>{formatYen(item.total)}</td>
+        <td>
+          {item.monthlyBudget !== undefined ? (
+            formatYen(item.monthlyBudget)
+          ) : (
+            <span className="text-base-content/30">−</span>
+          )}
+        </td>
+        <td>
+          {item.remaining !== undefined ? (
+            <span
+              className={clsx(
+                "font-medium",
+                item.remaining >= 0 ? "text-success" : "text-error",
+              )}
+            >
+              {item.remaining >= 0 ? "" : "−"}
+              {formatYen(Math.abs(item.remaining))}
+            </span>
+          ) : (
+            <span className="text-base-content/30">−</span>
+          )}
+        </td>
       </tr>
 
       {isExpanded &&
@@ -106,7 +131,7 @@ export function CategoryBreakdownRow({ item, index }: Props) {
             ))
           : item.payments.length > 0 && (
               <tr>
-                <td colSpan={3} className="p-0">
+                <td colSpan={5} className="p-0">
                   <PaymentDetailTable payments={item.payments} />
                 </td>
               </tr>

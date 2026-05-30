@@ -16,7 +16,7 @@ interface Category {
   id: string;
   name: string;
   order: number;
-  annualBudget?: number;
+  monthlyBudget?: number;
 }
 
 interface CategoryRule {
@@ -60,6 +60,26 @@ db.version(3)
         ...rule,
         categoryId: rule.tagId,
       })),
+    );
+  });
+
+db.version(4)
+  .stores({
+    paymentFiles: "fileName",
+    categories: "id, order",
+    categoryRules: "id, categoryId, order",
+  })
+  .upgrade(async (tx) => {
+    const categories = await tx.table("categories").toArray();
+    await tx.table("categories").bulkPut(
+      categories.map(
+        (cat: { annualBudget?: number; [key: string]: unknown }) => {
+          const { annualBudget, ...rest } = cat;
+          return annualBudget !== undefined
+            ? { ...rest, monthlyBudget: annualBudget }
+            : rest;
+        },
+      ),
     );
   });
 

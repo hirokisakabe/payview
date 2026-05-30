@@ -21,8 +21,8 @@ export function CategoryItem({ category }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(category.name);
-  const [editAnnualBudget, setEditAnnualBudget] = useState(
-    category.annualBudget !== undefined ? String(category.annualBudget) : "",
+  const [editMonthlyBudget, setEditMonthlyBudget] = useState(
+    category.monthlyBudget !== undefined ? String(category.monthlyBudget) : "",
   );
   const rulesResult = useCategoryRules({ categoryId: category.id });
 
@@ -37,8 +37,8 @@ export function CategoryItem({ category }: Props) {
   const handleUpdate = async () => {
     if (!editName.trim()) return;
 
-    const parsedBudget = editAnnualBudget.trim()
-      ? Number(editAnnualBudget.trim())
+    const parsedBudget = editMonthlyBudget.trim()
+      ? Number(editMonthlyBudget.trim())
       : undefined;
 
     if (
@@ -47,7 +47,7 @@ export function CategoryItem({ category }: Props) {
         !Number.isInteger(parsedBudget) ||
         parsedBudget < 0)
     ) {
-      alert("年予算には0以上の整数を入力してください。");
+      alert("月予算には0以上の整数を入力してください。");
       return;
     }
 
@@ -55,7 +55,7 @@ export function CategoryItem({ category }: Props) {
       await updateCategory({
         id: category.id,
         name: editName.trim(),
-        annualBudget: parsedBudget,
+        monthlyBudget: parsedBudget,
       });
       setIsEditing(false);
     } catch {
@@ -118,9 +118,9 @@ export function CategoryItem({ category }: Props) {
               if (e.key === "Escape") {
                 setIsEditing(false);
                 setEditName(category.name);
-                setEditAnnualBudget(
-                  category.annualBudget !== undefined
-                    ? String(category.annualBudget)
+                setEditMonthlyBudget(
+                  category.monthlyBudget !== undefined
+                    ? String(category.monthlyBudget)
                     : "",
                 );
               }
@@ -138,16 +138,16 @@ export function CategoryItem({ category }: Props) {
             </div>
             <div className="flex items-center gap-2">
               <label className="text-base-content/70 text-sm whitespace-nowrap">
-                年予算
+                月予算
               </label>
               <input
                 type="number"
                 className="input input-bordered input-sm w-40"
-                value={editAnnualBudget}
+                value={editMonthlyBudget}
                 placeholder="未設定"
                 min={0}
                 step={1}
-                onChange={(e) => setEditAnnualBudget(e.target.value)}
+                onChange={(e) => setEditMonthlyBudget(e.target.value)}
               />
               <span className="text-base-content/70 text-sm">円</span>
               <span className="text-base-content/50 text-xs">
@@ -164,9 +164,9 @@ export function CategoryItem({ category }: Props) {
                 onClick={() => {
                   setIsEditing(false);
                   setEditName(category.name);
-                  setEditAnnualBudget(
-                    category.annualBudget !== undefined
-                      ? String(category.annualBudget)
+                  setEditMonthlyBudget(
+                    category.monthlyBudget !== undefined
+                      ? String(category.monthlyBudget)
                       : "",
                   );
                 }}
@@ -178,9 +178,9 @@ export function CategoryItem({ category }: Props) {
         ) : (
           <>
             <span className="flex-1 font-medium">{category.name}</span>
-            {category.annualBudget !== undefined && (
+            {category.monthlyBudget !== undefined && (
               <span className="text-base-content/60 text-sm">
-                年予算 {category.annualBudget.toLocaleString()}円
+                月予算 {category.monthlyBudget.toLocaleString()}円
               </span>
             )}
             <span className="text-base-content/60 text-sm">

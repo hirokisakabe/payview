@@ -1,9 +1,9 @@
 import { db, type Category } from "../db";
 
-type Input = { id: string; name: string; annualBudget?: number };
+type Input = { id: string; name: string; monthlyBudget?: number };
 
 export async function updateCategory(input: Input): Promise<void> {
-  const { id, name, annualBudget } = input;
+  const { id, name, monthlyBudget } = input;
 
   const existing = await db.categories.get(id);
   if (!existing) return;
@@ -12,7 +12,7 @@ export async function updateCategory(input: Input): Promise<void> {
     id: existing.id,
     name,
     order: existing.order,
-    ...(annualBudget !== undefined ? { annualBudget } : {}),
+    ...(monthlyBudget !== undefined ? { monthlyBudget } : {}),
   };
 
   await db.categories.put(updated);

@@ -9,6 +9,7 @@ import {
 import { type Category } from "../../../data/db";
 import { updateCategory } from "../../../data/categories/updateCategory";
 import { deleteCategory } from "../../../data/categories/deleteCategory";
+import { DEFAULT_CATEGORY_COLORS } from "../../../data/categories/categoryColors";
 import { useCategoryRules } from "../../../data/categories/useCategoryRules";
 import { CategoryRuleList } from "./CategoryRuleList";
 import { AddCategoryRuleForm } from "./AddCategoryRuleForm";
@@ -24,7 +25,9 @@ export function CategoryItem({ category }: Props) {
   const [editMonthlyBudget, setEditMonthlyBudget] = useState(
     category.monthlyBudget !== undefined ? String(category.monthlyBudget) : "",
   );
-  const [editColor, setEditColor] = useState(category.color ?? "#8B5CF6");
+  const [editColor, setEditColor] = useState(
+    category.color ?? DEFAULT_CATEGORY_COLORS[0],
+  );
   const rulesResult = useCategoryRules({ categoryId: category.id });
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -125,7 +128,7 @@ export function CategoryItem({ category }: Props) {
                     ? String(category.monthlyBudget)
                     : "",
                 );
-                setEditColor(category.color ?? "#8B5CF6");
+                setEditColor(category.color ?? DEFAULT_CATEGORY_COLORS[0]);
               }
             }}
           >
@@ -183,7 +186,7 @@ export function CategoryItem({ category }: Props) {
                       ? String(category.monthlyBudget)
                       : "",
                   );
-                  setEditColor(category.color ?? "#8B5CF6");
+                  setEditColor(category.color ?? DEFAULT_CATEGORY_COLORS[0]);
                 }}
               >
                 キャンセル
@@ -195,7 +198,9 @@ export function CategoryItem({ category }: Props) {
             <span className="flex flex-1 items-center gap-2 font-medium">
               <span
                 className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
-                style={{ backgroundColor: category.color ?? "#8B5CF6" }}
+                style={{
+                  backgroundColor: category.color ?? DEFAULT_CATEGORY_COLORS[0],
+                }}
               />
               {category.name}
             </span>

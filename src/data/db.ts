@@ -1,5 +1,4 @@
 import Dexie, { type EntityTable } from "dexie";
-import { DEFAULT_CATEGORY_COLORS } from "./categories/categoryColors";
 
 type Payment = {
   name: string;
@@ -85,6 +84,20 @@ db.version(4)
     );
   });
 
+// このスナップショットは v4→v5 マイグレーション専用。後から変更しないこと。
+const V5_MIGRATION_COLORS = [
+  "#8B5CF6",
+  "#06B6D4",
+  "#10B981",
+  "#F59E0B",
+  "#EF4444",
+  "#3B82F6",
+  "#EC4899",
+  "#84CC16",
+  "#F97316",
+  "#6366F1",
+];
+
 db.version(5)
   .stores({
     paymentFiles: "fileName",
@@ -99,10 +112,7 @@ db.version(5)
           cat.color === undefined
             ? {
                 ...cat,
-                color:
-                  DEFAULT_CATEGORY_COLORS[
-                    index % DEFAULT_CATEGORY_COLORS.length
-                  ],
+                color: V5_MIGRATION_COLORS[index % V5_MIGRATION_COLORS.length],
               }
             : cat,
       ),

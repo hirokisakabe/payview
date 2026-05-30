@@ -11,6 +11,7 @@ import {
 import { formatYen } from "../../../../utils/formatYen";
 
 import { DEFAULT_CATEGORY_COLORS } from "../../../../data/categories/categoryColors";
+import { buildBudgetLineShape } from "./budgetLineShape";
 
 type DataItem = {
   name: string;
@@ -22,44 +23,6 @@ type DataItem = {
 type Props = {
   data: DataItem[];
 };
-
-type BudgetLineShapeProps = {
-  x?: number;
-  y?: number;
-  width?: number;
-  index?: number;
-  [key: string]: unknown;
-};
-
-function buildBudgetLineShape(data: DataItem[]) {
-  return function BudgetLineShape({
-    x,
-    y,
-    width,
-    index,
-  }: BudgetLineShapeProps) {
-    if (
-      x === undefined ||
-      y === undefined ||
-      width === undefined ||
-      index === undefined
-    )
-      return null;
-    const item = data[index];
-    if (!item?.budget) return null;
-    const isOverBudget = item.value > item.budget;
-    const stroke = isOverBudget ? "#EF4444" : "#10B981";
-    return (
-      <path
-        d={`M${x},${y} L${x + width},${y}`}
-        stroke={stroke}
-        strokeWidth={2}
-        strokeDasharray="4 2"
-        fill="none"
-      />
-    );
-  };
-}
 
 export function PayviewCategoryBarChart({ data }: Props) {
   const BudgetLineShape = useMemo(() => buildBudgetLineShape(data), [data]);

@@ -1,6 +1,6 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { formatYen } from "../../../../utils/formatYen";
-import { DEFAULT_CATEGORY_COLORS } from "../../../../data/categories/categoryColors";
+import { resolveCategoryColor } from "../../../../data/categories/categoryColors";
 
 type Props = {
   data: { name: string; value: number; color?: string }[];
@@ -24,12 +24,7 @@ export function PayviewCategoryPieChart({ data }: Props) {
             {data.map((item, index) => (
               <Cell
                 key={item.name}
-                fill={
-                  item.color ??
-                  DEFAULT_CATEGORY_COLORS[
-                    index % DEFAULT_CATEGORY_COLORS.length
-                  ]
-                }
+                fill={resolveCategoryColor(item.color, index)}
               />
             ))}
           </Pie>

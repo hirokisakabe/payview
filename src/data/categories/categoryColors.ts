@@ -14,3 +14,10 @@ export const DEFAULT_CATEGORY_COLORS = [
 export function getDefaultColor(index: number): string {
   return DEFAULT_CATEGORY_COLORS[index % DEFAULT_CATEGORY_COLORS.length];
 }
+
+export function resolveCategoryColor(
+  color: string | undefined,
+  index: number,
+): string {
+  return color ?? getDefaultColor(index);
+}

@@ -18,7 +18,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@heroicons/react": "^2.2.0",
-    "@tailwindcss/vite": "4.1.12",
+    "@tailwindcss/vite": "4.3.1",
     "@tanstack/react-router": "1.131.17",
     "@tanstack/react-router-devtools": "1.131.17",
     "@vercel/analytics": "1.6.1",
@@ -43,7 +43,7 @@
     "@types/encoding-japanese": "2.2.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.1",
-    "@vitejs/plugin-react": "^5.0.0",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "9.37.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-react-dom": "1.52.5",
@@ -57,7 +57,7 @@
     "prettier-plugin-tailwindcss": "0.6.14",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
-    "vite": "^7.3.2",
+    "vite": "^8.0.16",
     "vitest": "4.1.0"
   }
 }

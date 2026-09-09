@@ -23,7 +23,7 @@
     "@tanstack/react-router-devtools": "1.131.17",
     "@vercel/analytics": "1.6.1",
     "clsx": "2.1.1",
-    "csv": "6.4.1",
+    "csv": "6.6.3",
     "daisyui": "5.0.50",
     "dexie": "4.0.11",
     "dexie-react-hooks": "1.1.7",
